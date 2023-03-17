@@ -10,6 +10,7 @@ const productSchema = new mongoose.Schema(
     rating: { type: Number, required: true },
     brand: { type: String, required: true },
     description: { type: String, required: true },
+    series:[{ type: String, required: true }],
     category:[{ type: String, required: true }],
     discount: { type: String, required: true },
     image: { type: String, required: true },

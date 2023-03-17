@@ -23,6 +23,7 @@ app.get("/", (req, res) => {
 
 app.use("/vendor", VendorRoutes);
 app.use("/product", ProductRoutes);
+app.use("/")
 
 app.listen(process.env.port, async () => {
   try {
