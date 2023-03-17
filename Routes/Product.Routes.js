@@ -64,7 +64,7 @@ ProductRoutes.get("/", authenticate, async (req, res) => {
   }
 });
 
-ProductRoutes.get("allproductdata/:id",authenticate, async (req, res) => {
+ProductRoutes.get("allproductdata/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const product = await ProductModel.findById(id);
