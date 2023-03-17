@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { connection } = require("./configs/db");
-const {  ProductRoutes } = require("./Routes/Product.Routes");
+const { ProductRoutes } = require("./Routes/Product.Routes");
 const { UserModel } = require("./Model/User.model");
 const { VendorRoutes } = require("./Routes/Vendor.Routes");
 
@@ -23,7 +23,6 @@ app.get("/", (req, res) => {
 
 app.use("/vendor", VendorRoutes);
 app.use("/product", ProductRoutes);
-app.use("/")
 
 app.listen(process.env.port, async () => {
   try {
