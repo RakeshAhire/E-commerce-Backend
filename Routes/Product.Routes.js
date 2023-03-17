@@ -31,6 +31,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       const data = await ProductModel.find();
       data.size.forEach((item) => {
           item.size = req.body.size;
+          console.log(item.size)
       });
       res.send({ data: data, total: data.length });
     } else {
