@@ -8,12 +8,15 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
   const order = req.query.order || "asc";
   try {
      if (req.query.size && req.query.category) {
-      const products = await ProductModel.find({
+      let products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
+        size: { $regex: req.query.size, $options: "i" },
       });
-      products = products.size.forEach((item) => {
-        return (item.size = req.query.size);
-      });
+      products = products.map((el)=>{
+        el.size.forEach((item) => {
+          return (item.size = req.query.size);
+        });
+      })
       res.send({ data: products, total: products.length });
     }
    else if (req.query.category) {
