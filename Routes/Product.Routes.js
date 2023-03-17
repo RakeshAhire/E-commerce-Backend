@@ -13,7 +13,14 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         size: { $regex: req.query.size, $options: "i" },
       });
       res.send({ data: products, total: products.length });
-    } else if (req.query.category) {
+    } if (req.query.color && req.query.category) {
+      const products = await ProductModel.find({
+        category: { $regex: req.query.category, $options: "i" },
+        colour: { $regex: req.query.color, $options: "i" },
+      });
+      res.send({ data: products, total: products.length });
+    } 
+    else if (req.query.category) {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
       });
