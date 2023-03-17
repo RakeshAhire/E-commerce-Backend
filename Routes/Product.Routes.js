@@ -27,14 +27,12 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         brand: { $regex: req.query.brand, $options: "i" },
       });
       res.send({ data: products, total: products.length });
-    } else if (req.query.size) {
-      const products = await ProductModel.find().and([
-        {
-          size:{ $regex: req.query.size, $options: "i" },
-        },
-      ]);
-      console.log(products);
-      res.send({ data: products, total: products.length });
+    } else if (req.query.size && req.query.category) {
+      const data = await ProductModel.find();
+      data.size.forEach((item) => {
+          item.size = req.body.size;
+      });
+      res.send({ data: data, total: data.length });
     } else {
       const product = await ProductModel.find();
       res.send({ data: product, total: product.length });
