@@ -13,10 +13,13 @@ const productSchema = new mongoose.Schema(
     brand: { type: String },
     tags: [{ type: String }],
     description: [
-      { heading: {type:String}, 
-      bullet_points: [{type:String}],
-      ending:{type:string}
-    }
+      { 
+      heading: {type:String}, 
+      bullet_points: [
+        {type:String}
+      ],
+      ending:{type:String}
+     }
   ],
   additionalinfo:[
     { type: String }
