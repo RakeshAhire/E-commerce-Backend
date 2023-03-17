@@ -64,10 +64,9 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         colour: { $regex: req.query.color, $options: "i" },
       });
       res.send({ data: color, total: color.length });
-    } else if (req.query.max && req.query.min && req.query.category)  {
+    } else if (req.query.max && req.query.min)  {
       const data = await ProductModel.find({
         minprice: { $gt: req.query.min },
-        maxprice: { $lt: req.query.max },
         category: { $regex: req.query.category, $options: "i" },
       });
       res.send({ data: data, total: data.length });
