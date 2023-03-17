@@ -32,7 +32,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         category: { $regex: req.query.category, $options: "i" },
       });
       products.size.forEach((item) => {
-          item.size = req.body.size;
+          item.size = req.query.size;
           console.log(item.size)
       });
       res.send({ data: products, total: products.length });
