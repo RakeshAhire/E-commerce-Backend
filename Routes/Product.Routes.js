@@ -10,14 +10,14 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
     if (req.query.category) {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
-    });
+      });
       res.send({ data: products, total: products.length });
     } else if (req.query.color) {
       const color = await ProductModel.find({
         colour: { $regex: req.query.color, $options: "i" },
       });
       res.send({ data: color, total: color.length });
-    } else if ((req.query.max) && (req.query.min)) {
+    } else if (req.query.max && req.query.min) {
       const data = await ProductModel.find({
         price: { $gt: req.query.max, $lt: req.query.min },
       });
@@ -25,18 +25,18 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
     } else if (req.query.brand) {
       const products = await ProductModel.find({
         brand: { $regex: req.query.brand, $options: "i" },
-      })
+      });
       res.send({ data: products, total: products.length });
-    }
-    else  if (req.query.category && req.query.size){
-      const products = await ProductModel.find({
-        category: { $regex: req.query.category, $options: "i" },
-        size: { $regex: req.query.size, $options: "i" },
-    });
-    console.log(products)
+    } else if (req.query.category && req.query.size) {
+      const products = await ProductModel.find().and([
+        {
+          category: { $regex: req.query.category, $options: "i" },
+          size:{ $regex: req.query.size, $options: "i" },
+        },
+      ]);
+      console.log(products);
       res.send({ data: products, total: products.length });
-    }
-    else {
+    } else {
       const product = await ProductModel.find();
       res.send({ data: product, total: product.length });
     }
@@ -60,7 +60,7 @@ ProductRoutes.get("/", authenticate, async (req, res) => {
   }
 });
 
-ProductRoutes.get("/:id",  async (req, res) => {
+ProductRoutes.get("/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const product = await ProductModel.findById(id);
