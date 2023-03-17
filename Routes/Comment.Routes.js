@@ -1,8 +1,9 @@
 const express = require("express");
 const CommentModel = require("../Model/Comment.Model");
 const CommentRoutes = express.Router();
+const { authenticate } = require("../middleware/authentication.middleware");
 
-CommentRoutes.post("/add/:id", async (req, res) => {
+CommentRoutes.post("/add/:id",authenticate, async (req, res) => {
     const Id = req.params.id;
     const payload = req.body;
     
@@ -11,7 +12,7 @@ CommentRoutes.post("/add/:id", async (req, res) => {
         comment :payload.comment,
         rating: payload.rating,   
         postId :Id,
-        userId:"5666777887"
+        userId:userId
       });
   
       return res.status(201).send(cart);
