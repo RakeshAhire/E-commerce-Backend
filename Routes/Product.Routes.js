@@ -31,9 +31,9 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
       });
-      products.size.forEach((item) => {
-          item.size = req.query.size;
-          console.log(item.size)
+      products=products.size.forEach((item) => {
+          return item.size = req.query.size;
+          
       });
       res.send({ data: products, total: products.length });
     } else {
