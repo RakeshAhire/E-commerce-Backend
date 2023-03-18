@@ -3,10 +3,13 @@ const cors = require("cors");
 const { connection } = require("./configs/db");
 const { ProductRoutes } = require("./Routes/Product.Routes");
 
-const { VendorRoutes } = require("./Routes/Vendor.Routes");
 const { CommentRoutes } = require("./Routes/Comment.Routes");
 const { AddressRoutes } = require("./Routes/Address.Routes");
 const { CartRoutes } = require("./Routes/Cart.Routes");
+const userRouter = require("./Routes/userRouter.js");
+const {signup} = require("./controllers/user.controller.js");
+
+
 
 require("dotenv").config();
 
@@ -24,11 +27,16 @@ app.get("/", (req, res) => {
   res.send("Welcome");
 });
 
-app.use("/vendor", VendorRoutes);
+app.use("/api/user", userRouter);
+
+app.post("/signup", signup);
+
+
+
 app.use("/product", ProductRoutes);
 app.use("/comment", CommentRoutes);
-app.use("/cart",CartRoutes)
-app.use("/address",AddressRoutes)
+app.use("/cart", CartRoutes);
+app.use("/address", AddressRoutes);
 
 app.listen(process.env.port, async () => {
   try {
