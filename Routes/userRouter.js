@@ -6,10 +6,11 @@ const otpGenerator = require("otp-generator");
 
 
 const { Otp } = require("../Model/otpModel");
-const User = require("../Model/user.model");
+const userModel = require("../Model/user.model");
+
 
 router.post("/signup", async (req, res) => {
-  const user = await User.findOne({
+  const user = await userModel.findOne({
     number: req.body.number,
   });
   if (user) {
@@ -56,7 +57,7 @@ router.post("/signup/verify", async (req, res) => {
   const validUser = await bcrypt.compare(req.body.otp, rightOtpFind.otp);
 
   if (rightOtpFind.number === req.body.number && validUser) {
-    const user = new User(_.pick(req.body, ["number"]));
+    const user = new userModel(_.pick(req.body, ["number"]));
     const token = user.generateJWT();
     const result = await user.save();
     const OTPDelete = await Otp.deleteMany({
