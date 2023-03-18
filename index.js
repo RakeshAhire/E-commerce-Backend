@@ -6,6 +6,7 @@ const { ProductRoutes } = require("./Routes/Product.Routes");
 const { VendorRoutes } = require("./Routes/Vendor.Routes");
 const { CommentRoutes } = require("./Routes/Comment.Routes");
 const { AddressRoutes } = require("./Routes/Address.Routes");
+const { CartRoutes } = require("./Routes/Cart.Routes");
 
 require("dotenv").config();
 
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 app.use("/vendor", VendorRoutes);
 app.use("/product", ProductRoutes);
 app.use("/comment", CommentRoutes);
+app.use("/cart",CartRoutes)
 app.use("/address",AddressRoutes)
 
 app.listen(process.env.port, async () => {
