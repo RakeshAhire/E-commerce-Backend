@@ -36,8 +36,7 @@ CartRoutes.get("/", authenticate, async (req, res) => {
   const payload = req.body;
   try {
     const product = await CartModel.find({ userId: payload.userId });
-    console.log(product);
-    res.send({ data: product });
+    res.send({ data: product,Total:product.length });
   } catch (error) {
     console.log("error", error);
     res.status(500).send({
