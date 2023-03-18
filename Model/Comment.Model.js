@@ -2,20 +2,20 @@ const mongoose = require("mongoose");
 
 const CommentSchema = new mongoose.Schema(
   {
-    productid:{ type: String, required: true },
-    comment:{ type: String, required: true },
-    rating:{ type: String, required: true },
+    comment: { type: String },
+    rating: { type: Number },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
-      required: true,
+      ref: "vendor",
     },
   },
+
   {
     versionKey: false,
     timestamps: true,
   }
 );
+
 
 const CommentModel = mongoose.model("comment", CommentSchema);
 
