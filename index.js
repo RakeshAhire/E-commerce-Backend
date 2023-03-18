@@ -6,7 +6,7 @@ const { ProductRoutes } = require("./Routes/Product.Routes");
 const { CommentRoutes } = require("./Routes/Comment.Routes");
 const { AddressRoutes } = require("./Routes/Address.Routes");
 const { CartRoutes } = require("./Routes/Cart.Routes");
-const userRouter = require("./Routes/userRouter.js");
+const userRouter = require("./Routes/userRouter");
 const {signup} = require("./controllers/user.controller.js");
 const { VendorRoutes } = require("./Routes/Vendor.Routes");
 

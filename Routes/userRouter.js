@@ -18,12 +18,15 @@ router.post("/signup", async (req, res) => {
     return res.status(400).send("User already Registred!");
   }
 
+
   const OTP = otpGenerator.generate(6, {
     digits: true,
     lowerCaseAlphabets: false,
     upperCaseAlphabets: false,
     specialChars: false,
   });
+
+  
 
   const number = req.body.number;
 
