@@ -9,6 +9,7 @@ const { Otp } = require("../Model/otpModel");
 const userModel = require("../Model/user.model");
 
 
+
 router.post("/signup", async (req, res) => {
   const user = await userModel.findOne({
     number: req.body.number,
