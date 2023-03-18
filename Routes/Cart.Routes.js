@@ -59,11 +59,20 @@ CartRoutes.get("/:id",  async (req, res) => {
 
 CartRoutes.post("/add", authenticate, async (req, res) => {
   try {
-    let data = req.body;
-    let data1 = new CartModel(data);
-    let saved = await data1.save();
-
-    res.send({ msg: "Your item is Added" });
+    const title = await CartModel.findOne({ productId: payload.productId });
+    console.log(title)
+    if (title) {
+      res
+        .status(200)
+        .send({
+          msg: "This item is already Present",
+          error: true,
+        });
+    } else {
+      const data = new CartModel(payload);
+      await data.save();
+      res.send({ msg: "Your item is added" });
+    }
   } catch (err) {
     res.send({ msg: "could not add Item" });
   }
