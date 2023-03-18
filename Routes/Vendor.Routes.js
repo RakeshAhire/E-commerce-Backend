@@ -2,7 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { VendorModel } = require("../Model/Vendor.model");
+const { VendorModel } = require("../Model/vendor.model");
 
 const saltRounds = +process.env.saltRounds;
 
