@@ -7,7 +7,7 @@ const authenticate = (req, res, next) => {
     res.send({msg:"Please login first"})
   }
 
-  const decoded=jwt.verify(token, process.env.JWT_SECRET);
+  const decoded=jwt.verify(token, process.env.key);
   
   if(decoded){
    
