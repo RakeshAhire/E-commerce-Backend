@@ -8,6 +8,7 @@ const { AddressRoutes } = require("./Routes/Address.Routes");
 const { CartRoutes } = require("./Routes/Cart.Routes");
 const userRouter = require("./Routes/userRouter.js");
 const {signup} = require("./controllers/user.controller.js");
+const { VendorRoutes } = require("./Routes/Vendor.Routes");
 
 
 
@@ -31,7 +32,7 @@ app.use("/api/user", userRouter);
 
 app.post("/signup", signup);
 
-
+app.use("/vendor",VendorRoutes)
 
 app.use("/product", ProductRoutes);
 app.use("/comment", CommentRoutes);
