@@ -58,6 +58,7 @@ CartRoutes.get("/:id",  async (req, res) => {
 });
 
 CartRoutes.post("/add", authenticate, async (req, res) => {
+  const payload=req.body
   try {
     const title = await CartModel.findOne({ productId: payload.productId });
     console.log(title)
