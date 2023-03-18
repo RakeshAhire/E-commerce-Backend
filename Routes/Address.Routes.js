@@ -21,34 +21,27 @@ AddressRoutes.get("/", authenticate, async (req, res) => {
   }
 });
 
-AddressRoutes.get("allproductdata/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    const product = await AddressModel.findById(id);
-    res.send(product);
-  } catch (error) {
-    res.status(404).send({ msg: "something went wrong" });
-  }
-});
-AddressRoutes.get("/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    const product = await AddressModel.findById(id);
-    res.send(product);
-  } catch (error) {
-    res.status(404).send({ msg: "something went wrong" });
-  }
-});
+
 
 AddressRoutes.post("/add", authenticate, async (req, res) => {
+  const payload=req.body
   try {
-    let data = req.body;
-    let data1 = new AddressModel(data);
-    let saved = await data1.save();
-
-    res.send({ msg: "Data Added" });
+    const title = await AddressModel.findOne({ address: payload.address });
+    console.log(title)
+    if (title) {
+      res
+        .status(200)
+        .send({
+          msg: "This Address is already Present",
+          error: true,
+        });
+    } else {
+      const data = new AddressModel(payload);
+      await data.save();
+      res.send({ msg: "Your address is added" });
+    }
   } catch (err) {
-    res.send({ msg: "could not add Data" });
+    res.send({ msg: "could not add Address" });
   }
 });
 
@@ -84,7 +77,7 @@ AddressRoutes.delete("/delete/:id", authenticate, async (req, res) => {
       res.send({ msg: "You are not Recognized" });
     } else {
       await AddressModel.findByIdAndDelete({ _id: Id });
-      res.send("Deleted the Hotel Data");
+      res.send("Deleted Your Address");
     }
   } catch (err) {
     console.log(err);
