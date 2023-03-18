@@ -4,8 +4,9 @@ const _ = require("lodash");
 const axios = require("axios");
 const otpGenerator = require("otp-generator");
 
-const User = require("../Model/user.model");
+
 const { Otp } = require("../Model/otpModel");
+const User = require("../Model/user.model");
 
 router.post("/signup", async (req, res) => {
   const user = await User.findOne({
