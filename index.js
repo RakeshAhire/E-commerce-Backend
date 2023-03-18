@@ -6,13 +6,7 @@ const { ProductRoutes } = require("./Routes/Product.Routes");
 const { CommentRoutes } = require("./Routes/Comment.Routes");
 const { AddressRoutes } = require("./Routes/Address.Routes");
 const { CartRoutes } = require("./Routes/Cart.Routes");
-// const {
-//   userLoggedIn,
-//   login,
-//   signup,
-// } = require("./controllers/user.controller.js");
 
-// const userRouter = require("./Routes/userRouter");
 const { VendorRoutes } = require("./Routes/Vendor.Routes");
 
 
@@ -33,11 +27,7 @@ app.get("/", (req, res) => {
   res.send("Welcome");
 });
 
-// app.use("/api/user", userRouter);
 
-// app.post("/signup", signup);
-
-// app.post("/login", login);
 
 app.use("/vendor",VendorRoutes)
 
