@@ -4,20 +4,16 @@ const _ = require("lodash");
 const axios = require("axios");
 const otpGenerator = require("otp-generator");
 
-
+const User = require("../Model/user.model");
 const { Otp } = require("../Model/otpModel");
-const userModel = require("../Model/user.model");
-
-
 
 router.post("/signup", async (req, res) => {
-  const user = await userModel.findOne({
+  const user = await User.findOne({
     number: req.body.number,
   });
   if (user) {
     return res.status(400).send("User already Registred!");
   }
-
 
   const OTP = otpGenerator.generate(6, {
     digits: true,
@@ -25,8 +21,6 @@ router.post("/signup", async (req, res) => {
     upperCaseAlphabets: false,
     specialChars: false,
   });
-
-  
 
   const number = req.body.number;
 
@@ -61,7 +55,7 @@ router.post("/signup/verify", async (req, res) => {
   const validUser = await bcrypt.compare(req.body.otp, rightOtpFind.otp);
 
   if (rightOtpFind.number === req.body.number && validUser) {
-    const user = new userModel(_.pick(req.body, ["number"]));
+    const user = new User(_.pick(req.body, ["number"]));
     const token = user.generateJWT();
     const result = await user.save();
     const OTPDelete = await Otp.deleteMany({
