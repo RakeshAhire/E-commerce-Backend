@@ -5,33 +5,6 @@ const CartRoutes = express.Router();
 
 
 
-CartRoutes.get("/allproductdata", async (req, res) => {
-  const order = req.query.order || "asc";
-  try {
-    if (req.query.category) {
-      const products = await CartModel.find({
-        category: { $regex: req.query.category, $options: "i" },
-      });
-      res.send({ data: products, total: products.length });
-    } else if (req.query.color) {
-      const color = await CartModel.find({
-        colour: { $regex: req.query.color, $options: "i" },
-      });
-      res.send({ data: color, total: color.length });
-    } else if ((req.query.max) && (req.query.min)) {
-      const data = await CartModel.find({
-        price: { $gt: req.query.max, $lt: req.query.min },
-      });
-      res.send({ data: data, total: data.length });
-    } else {
-      const product = await CartModel.find();
-      res.send({ data: product, total: product.length });
-    }
-  } catch (e) {
-    return res.status(500).send(e.message);
-  }
-});
-
 CartRoutes.get("/", authenticate, async (req, res) => {
   const payload = req.body;
   try {

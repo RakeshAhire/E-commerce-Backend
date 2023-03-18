@@ -7,6 +7,7 @@ const { ProductModel } = require("../Model/Product.Model");
 ProductRoutes.get("/allproductdata", async (req, res) => {
   const order = req.query.order || "asc";
   try {
+
     if (req.query.colour && req.query.category && req.query.size && req.query.series) {
       const products = await ProductModel.find({
         series: { $regex: req.query.series, $options: "i" },
@@ -108,6 +109,7 @@ ProductRoutes.get("allproductdata/:id", async (req, res) => {
     res.status(404).send({ msg: "something went wrong" });
   }
 });
+
 ProductRoutes.get("/:id", async (req, res) => {
   const id = req.params.id;
   try {
