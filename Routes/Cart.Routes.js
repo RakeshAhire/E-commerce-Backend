@@ -32,7 +32,7 @@ CartRoutes.get("/allproductdata", async (req, res) => {
   }
 });
 
-CartRoutes.get("/", authenticate, async (req, res) => {
+CartRoutes.get("/", async (req, res) => {
   const payload = req.body;
   try {
     const product = await CartModel.find({ userId: payload.userId });
@@ -56,7 +56,7 @@ CartRoutes.get("/:id",  async (req, res) => {
   }
 });
 
-CartRoutes.post("/add", authenticate, async (req, res) => {
+CartRoutes.post("/add", async (req, res) => {
   const payload=req.body
   try {
     const title = await CartModel.findOne({ productId: payload.productId });
@@ -78,7 +78,7 @@ CartRoutes.post("/add", authenticate, async (req, res) => {
   }
 });
 
-CartRoutes.patch("/update/:id", authenticate, async (req, res) => {
+CartRoutes.patch("/update/:id", async (req, res) => {
   const Id = req.params.id;
   const payload = req.body;
 
@@ -100,7 +100,7 @@ CartRoutes.patch("/update/:id", authenticate, async (req, res) => {
   }
 });
 
-CartRoutes.delete("/delete/:id", authenticate, async (req, res) => {
+CartRoutes.delete("/delete/:id", async (req, res) => {
   const Id = req.params.id;
   const note = await CartModel.findOne({ _id: Id });
   const hotelId = note.created_by;
