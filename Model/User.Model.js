@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 let jwt = require("jsonwebtoken");
-const JWT_SECRET_KEY = "774bgtumnhnhydscffsr";
+const key = "774bgtumnhnhydscffsr";
 const userSchema = new mongoose.Schema(
   {
     name: String,
@@ -25,7 +25,7 @@ userSchema.methods.generateJWT = function () {
       _id: this._id,
       number: this.number,
     },
-    JWT_SECRET_KEY,
+    ke,
     { expiresIn: "7d" }
   );
   return token;

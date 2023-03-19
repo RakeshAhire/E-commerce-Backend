@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 dotenv.config();
 
 // Secret key used to sign JWT tokens
-const JWT_SECRET = process.env.JWT_SECRET || "default_secret_key";
+const key = process.env.key || "default_secret_key";
 
 // Signup endpoint
 const signup = async (req, res) => {
@@ -84,7 +84,7 @@ const login = async (req, res) => {
         name: existingUser.name,
         email: existingUser.email,
       },
-      JWT_SECRET
+      key
     );
 
     return res.send({
@@ -115,7 +115,7 @@ const userLoggedIn = async (req, res) => {
     }
 
     // Verify JWT token and extract user data from it
-    const decodedToken = jwt.verify(token, JWT_SECRET);
+    const decodedToken = jwt.verify(token, key);
     const user = await userModel.findById(decodedToken._id);
 
     // Remove password from user object before sending it in the response
