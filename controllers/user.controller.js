@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 
 const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
-const userModel = require("../Model/user.model");
+const {userModel} = require("../Model/user.model");
 
 // Load environment variables from .env file
 dotenv.config();
