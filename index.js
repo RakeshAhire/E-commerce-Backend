@@ -8,10 +8,10 @@ const { CartRoutes } = require("./Routes/Cart.Routes");
 const { VendorRoutes } = require("./Routes/Vendor.Routes");
 
 const {
-  signup,
-  login,
   userLoggedIn,
-} = require("./controllers/user.controller.js");
+  login,
+  signup
+} = require("./controllers/user.controller");
 
 const userRouter = require("./Routes/userRouter");
 
