@@ -54,42 +54,7 @@ router.post('/verify', async (req, res) => {
       
       res.json({ message: 'OTP verified successfully', token });
 
-      if (user) {
-        bcrypt.compare(password, user.password, (err, result) => {
-          if (err) {
-            throw err;
-          } else {
-            if (result) {
-              jwt.sign(
-                {
-                  userId: user._id,
-                  name: user.name,
-                  email: user.email,
-                  userType: user.userType,
-                },
-  
-                process.env.key,
-                (err, token) => {
-                  if (err) {
-                    throw err;
-                  } else {
-                    res.status(200).send({
-                      msg: "logged in success",
-                      token,
-                      username: user.name,
-                      error: false,
-                    });
-                  }
-                }
-              );
-            } else {
-              res.send({ msg: "wrong credential", error: true });
-            }
-          }
-        });
-      } else {
-        res.send({ msg: "User Not found", error: true });
-      }
+      
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
