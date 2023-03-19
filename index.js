@@ -7,12 +7,6 @@ const { AddressRoutes } = require("./Routes/Address.Routes");
 const { CartRoutes } = require("./Routes/Cart.Routes");
 const { VendorRoutes } = require("./Routes/Vendor.Routes");
 
-// const {
-//   userLoggedIn,
-//   login,
-//   signup
-// } = require("./controllers/user.controller");
-
 const {router} = require("./Routes/userRouter");
 
 
@@ -38,11 +32,7 @@ app.get("/", (req, res) => {
 app.use("/api/user",router);
 
 
-// app.post("/signup", signup);
 
-// app.post("/login", login);
-
-// app.get("/userLoggedIn", userLoggedIn);
 app.use("/vendor",VendorRoutes)
 
 app.use("/product", ProductRoutes);
