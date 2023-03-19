@@ -3,6 +3,7 @@ const {CommentModel}=require("../Model/Comment.Model")
 
 const CommentRoutes = express.Router();
 const { authenticate } = require("../middleware/authentication.middleware");
+const authMiddleware = require("../middleware/auth.middleware");
 
 
 CommentRoutes.get("/", authenticate, async (req, res) => {
@@ -33,7 +34,7 @@ CommentRoutes.get("/:id", async (req, res) => {
 });
 
 
-CommentRoutes.post("/add", authenticate, async (req, res) => {
+CommentRoutes.post("/add", authMiddleware, async (req, res) => {
   let payload = req.body;
   // console.log(payload)
   try {
