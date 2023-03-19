@@ -13,7 +13,7 @@ const {
   signup
 } = require("./controllers/user.controller");
 
-const userRouter = require("./Routes/userRouter");
+const {router} = require("./Routes/userRouter");
 
 
 
@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
 });
 
 
-app.use("/api/user",userRouter);
+app.use("/api/user",router);
 
 
 app.post("/signup", signup);

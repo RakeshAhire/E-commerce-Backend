@@ -82,4 +82,4 @@ router.post("/signup/verify", async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = {router};
