@@ -22,17 +22,17 @@ const userSchema = new mongoose.Schema({
   { timestamps: true }
 );
 
-// userSchema.methods.generateJWT = function () {
-//   const token = jwt.sign(
-//     {
-//       _id: this._id,
-//       number: this.number,
-//     },
-//     ke,
-//     { expiresIn: "7d" }
-//   );
-//   return token;
-// };
+userSchema.methods.generateJWT = function () {
+  const token = jwt.sign(
+    {
+      _id: this._id,
+      number: this.number,
+    },
+    ke,
+    { expiresIn: "7d" }
+  );
+  return token;
+};
 
 const userModel = mongoose.model("users", userSchema);
 
