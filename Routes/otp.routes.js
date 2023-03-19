@@ -41,35 +41,40 @@ router.post('/verify', async (req, res) => {
     
     try {
     // Find the OTP code in the database
-    const user = await OtpModel.findOne({ phoneNumber, otp: otpCode, expiresAt: { $gt: new Date() } });
-    if (!user) {
+    const otp = await OtpModel.findOne({ phoneNumber, otp: otpCode, expiresAt: { $gt: new Date() } });
+    if (!otp) {
         return res.status(400).json({ message: 'Invalid OTP' });
       }
       
       // Delete the OTP code from the database
-      await user.delete();
+      await otp.delete();
       
       // Generate a JWT token for the user
-    //   const token = jwt.sign({ phoneNumber}, process.env.JWT_SECRET);
+      const token = jwt.sign({ phoneNumber}, process.env.JWT_SECRET);
       
-    //   res.json({ message: 'OTP verified successfully', token });
+      res.json({ message: 'OTP verified successfully', token });
 
       if (user) {
+        bcrypt.compare(password, user.password, (err, result) => {
+          if (err) {
+            throw err;
+          } else {
+            if (result) {
               jwt.sign(
                 {
                   userId: user._id,
                   name: user.name,
                   email: user.email,
-                  phoneNumber:user.phoneNumber
+                  userType: user.userType,
                 },
   
-                process.env.JWT_SECRET,
+                process.env.key,
                 (err, token) => {
                   if (err) {
                     throw err;
                   } else {
                     res.status(200).send({
-                      msg: "OTP verified successfully",
+                      msg: "logged in success",
                       token,
                       username: user.name,
                       error: false,
@@ -80,6 +85,11 @@ router.post('/verify', async (req, res) => {
             } else {
               res.send({ msg: "wrong credential", error: true });
             }
+          }
+        });
+      } else {
+        res.send({ msg: "User Not found", error: true });
+      }
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
