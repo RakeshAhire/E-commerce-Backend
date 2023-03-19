@@ -3,12 +3,10 @@ const bcrypt = require("bcryptjs");
 const _ = require("lodash");
 const axios = require("axios");
 const otpGenerator = require("otp-generator");
-
-const User = require("../Model/user.model");
 const { Otp } = require("../Model/otpModel");
 
 router.post("/signup", async (req, res) => {
-  const user = await User.findOne({
+  const user = await Otp.findOne({
     number: req.body.number,
     email: req.body.email
   });
@@ -65,7 +63,7 @@ router.post("/signup/verify", async (req, res) => {
   const validUser = await bcrypt.compare(req.body.otp, rightOtpFind.otp);
 
   if (rightOtpFind.number === req.body.number && validUser) {
-    const user = new User(_.pick(req.body, ["number"]));
+    const user = new Otp(_.pick(req.body, ["number"]));
     const token = user.generateJWT();
     const result = await user.save();
     const OTPDelete = await Otp.deleteMany({
