@@ -7,10 +7,6 @@ const { AddressRoutes } = require("./Routes/Address.Routes");
 const { CartRoutes } = require("./Routes/Cart.Routes");
 const { VendorRoutes } = require("./Routes/Vendor.Routes");
 
-const {router} = require("./Routes/userRouter");
-
-
-
 
 require("dotenv").config();
 
@@ -29,7 +25,7 @@ app.get("/", (req, res) => {
 });
 
 
-app.use("/user",router);
+
 
 
 
