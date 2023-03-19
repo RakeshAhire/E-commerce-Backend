@@ -2,12 +2,19 @@ const express = require("express");
 const cors = require("cors");
 const { connection } = require("./configs/db");
 const { ProductRoutes } = require("./Routes/Product.Routes");
-
 const { CommentRoutes } = require("./Routes/Comment.Routes");
 const { AddressRoutes } = require("./Routes/Address.Routes");
 const { CartRoutes } = require("./Routes/Cart.Routes");
-
 const { VendorRoutes } = require("./Routes/Vendor.Routes");
+
+const {
+  signup,
+  login,
+  userLoggedIn,
+} = require("./controllers/user.controller.js");
+
+const userRouter = require("./Routes/userRouter");
+
 
 
 
@@ -28,7 +35,14 @@ app.get("/", (req, res) => {
 });
 
 
+app.use("/api/user",userRouter);
 
+
+app.post("/signup", signup);
+
+app.post("/login", login);
+
+app.get("/userLoggedIn", userLoggedIn);
 app.use("/vendor",VendorRoutes)
 
 app.use("/product", ProductRoutes);
