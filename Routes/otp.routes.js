@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const otpGenerator = require('otp-generator');
 const moment = require('moment');
-const jwt = require("jsonwebtoken");
 const OtpModel = require('../Model/otp.model');
  const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
@@ -50,11 +49,9 @@ router.post('/verify', async (req, res) => {
       await otp.delete();
       
       // Generate a JWT token for the user
-      const token = jwt.sign({ phoneNumber}, process.env.JWT_SECRET);
+      const token = jwt.sign({ phoneNumber }, process.env.JWT_SECRET);
       
       res.json({ message: 'OTP verified successfully', token });
-
-      
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
