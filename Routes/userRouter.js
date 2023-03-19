@@ -50,33 +50,41 @@ router.post("/signup", async (req, res) => {
   return res.status(200).send({ status: "success", otp: OTP });
 });
 
-router.post("/signup/verify", async (req, res) => {
-  const otpHolder = await Otp.find({
-    number: req.body.number,
-    email: req.body.email,
-  });
+router.post("/login", async (req, res) => {
+  const { number, email, otp } = req.body;
+
+  // Validate the request body
+  if (!number || !email || !otp) {
+    return res.status(400).send("Invalid request");
+  }
+
+  const otpHolder = await Otp.find({ number, email });
   if (otpHolder.length === 0) {
-    return res.status(404).send("You have used Expired OTP!");
+    return res.status(401).send("Unauthorized");
   }
 
   const rightOtpFind = otpHolder[otpHolder.length - 1];
-  const validUser = await bcrypt.compare(req.body.otp, rightOtpFind.otp);
+  const validUser = await bcrypt.compare(otp, rightOtpFind.otp);
 
-  if (rightOtpFind.number === req.body.number && validUser) {
-    const user = new Otp(_.pick(req.body, ["number"]));
+  if (validUser) {
+    const user = new Otp({ number });
     const token = user.generateJWT();
     const result = await user.save();
-    const OTPDelete = await Otp.deleteMany({
-      number: rightOtpFind.number,
-    });
+    const OTPDelete = await Otp.deleteMany({ number: rightOtpFind.number });
+
+    // Log the successful login attempt
+    console.log(`Successful login for number ${number} from IP ${req.ip}`);
 
     return res.status(200).send({
-      message: "User login Successfull!",
-      token: token,
+      message: "User login successful!",
+      token,
       data: result,
     });
   } else {
-    return res.status(400).send("Your OTP was wrong");
+    // Log the failed login attempt
+    console.log(`Failed login for number ${number} from IP ${req.ip}`);
+
+    return res.status(401).send("Incorrect OTP");
   }
 });
 
