@@ -19,7 +19,8 @@ app.use(
 );
 
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
+app.use('/otp', require('./Routes/otp.routes'));
 app.get("/", (req, res) => {
   res.send("Welcome");
 });
