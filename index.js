@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 
-app.use("/api/user",router);
+app.use("/user",router);
 
 
 
