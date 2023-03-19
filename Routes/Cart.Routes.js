@@ -56,27 +56,19 @@ CartRoutes.get("/:id",  async (req, res) => {
   }
 });
 
-CartRoutes.post("/add", async (req, res) => {
-  const payload=req.body
+CartRoutes.post("/add", authenticate, async (req, res) => {
+  let payload = req.body;
+  // console.log(payload)
   try {
-    const title = await CartModel.findOne({ productId: payload.productId });
-    console.log(title)
-    if (title) {
-      res
-        .status(200)
-        .send({
-          msg: "This item is already Present",
-          error: true,
-        });
-    } else {
-      const data = new CartModel(payload);
-      await data.save();
-      res.send({ msg: "Your item is added" });
-    }
+    let data1 = new CartModel(payload);
+    console.log(data1)
+    let saved = await data1.save();
+    res.send({ msg: "Your item is Added" });
   } catch (err) {
-    res.send({ msg: "could not add Item" });
+    res.send(err);
   }
 });
+
 
 CartRoutes.patch("/update/:id", async (req, res) => {
   const Id = req.params.id;

@@ -76,6 +76,13 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         brand: { $regex: req.query.brand, $options: "i" },
       });
       res.send({ data: products, total: products.length });
+    }
+      else if (req.query.series &&req.query.category) {
+        const series = await ProductModel.find({
+          series: { $regex: req.query.series, $options: "i" },
+          category: { $regex: req.query.category, $options: "i" },
+        });
+        res.send({ data: series, total: products.length });
     } else {
       const product = await ProductModel.find();
       res.send({ data: product, total: product.length });
