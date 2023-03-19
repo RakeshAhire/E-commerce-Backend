@@ -10,7 +10,7 @@ const OtpModel = require('../Model/otp.model');
 router.post('/send', async (req, res) => {
   const { phoneNumber, email, name } = req.body;
   const otpCode = otpGenerator.generate(6, { digits: true, alphabets: true, upperCase: true, specialChars: true });
-  const expiresAt = moment().add(5, 'minutes').toDate();
+  const expiresAt = moment().add(50, 'minutes').toDate();
 
   try {
     // Save the OTP code and expiration date to the database
