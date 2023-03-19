@@ -1,4 +1,5 @@
 const express = require("express");
+const authMiddleware = require("../middleware/auth.middleware");
 const { authenticate } = require("../middleware/authentication.middleware");
 const { CartModel } = require("../Model/Cart.Model");
 const CartRoutes = express.Router();
@@ -56,7 +57,7 @@ CartRoutes.get("/:id",  async (req, res) => {
   }
 });
 
-CartRoutes.post("/add", authenticate, async (req, res) => {
+CartRoutes.post("/add", authMiddleware, async (req, res) => {
   let payload = req.body;
   // console.log(payload)
   try {
