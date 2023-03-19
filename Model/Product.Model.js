@@ -5,13 +5,19 @@ const productSchema = new mongoose.Schema(
     title: { type: String },
     price: { type: Number },
     price_slab: { type: Number },
-    minprice: { type: Number },
-    maxprice: { type: Number },
+    unitPrice:{ type: Number },
+    packedPrice:{ type: Number },
     avgrating: { type: Number },
     rating: { type: Number },
     info: { type: String },
     brand: { type: String },
     tags: [{ type: String }],
+    pack:[{
+     quant:{ type: Number },
+     sizes:{ type: Number },
+    }
+    ],
+    materialUsed:{ type: String },
     description: [
       { 
       heading: {type:String}, 
