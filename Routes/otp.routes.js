@@ -50,7 +50,7 @@ router.post('/verify', async (req, res) => {
       await otp.delete();
       
       // Generate a JWT token for the user
-      const token = jwt.sign({ phoneNumber,userId:otp._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ phoneNumber}, process.env.JWT_SECRET);
       
       res.json({ message: 'OTP verified successfully', token });
     } catch (err) {
