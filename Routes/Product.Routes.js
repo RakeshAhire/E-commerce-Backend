@@ -93,7 +93,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
 ProductRoutes.get("/", authenticate, async (req, res) => {
   const payload = req.body;
   try {
-    const product = await ProductModel.find({ userId: payload.userId });
+    const product = await ProductModel.find({ vendorId: payload.vendorId });
     console.log(product);
     res.send({ data: product });
   } catch (error) {
@@ -145,9 +145,9 @@ ProductRoutes.patch("/update/:id", authenticate, async (req, res) => {
 
   const hotelId = hotel.created_by;
   console.log(hotelId);
-  const userId_making_req = req.body.created_by;
+  const vendorId_making_req = req.body.created_by;
   try {
-    if (userId_making_req !== hotelId) {
+    if (vendorId_making_req !== hotelId) {
       res.send({ msg: "You are not authorized" });
     } else {
       await ProductModel.findByIdAndUpdate({ _id: Id }, payload);
@@ -163,9 +163,9 @@ ProductRoutes.delete("/delete/:id", authenticate, async (req, res) => {
   const Id = req.params.id;
   const note = await ProductModel.findOne({ _id: Id });
   const hotelId = note.created_by;
-  const userId_making_req = req.body.created_by;
+  const vendorId_making_req = req.body.created_by;
   try {
-    if (userId_making_req !== hotelId) {
+    if (vendorId_making_req !== hotelId) {
       res.send({ msg: "You are not Recognized" });
     } else {
       await ProductModel.findByIdAndDelete({ _id: Id });

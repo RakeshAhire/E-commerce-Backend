@@ -61,7 +61,7 @@ VendorRoutes.post("/login", async (req, res) => {
           if (result) {
             jwt.sign(
               {
-                userId: user._id,
+                vendorId: user._id,
                 name: user.name,
                 email: user.email,
                 userType: user.userType,

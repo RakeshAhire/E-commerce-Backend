@@ -45,7 +45,7 @@ const productSchema = new mongoose.Schema(
     sold_by: { type: String },
     emi: { type: Number },
 
-    userId: {
+    vendorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "vendor",
     },

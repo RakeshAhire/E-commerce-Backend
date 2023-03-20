@@ -11,7 +11,7 @@ const authenticate = (req, res, next) => {
   
   if(decoded){
    
-      req.body.userId=decoded.userId;
+      req.body.vendorId=decoded.vendorId;
       next()
   }else{
       res.send({msg:"Please login first"})
