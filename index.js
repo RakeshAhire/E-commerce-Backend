@@ -8,6 +8,7 @@ const { CartRoutes } = require("./Routes/Cart.Routes");
 const { VendorRoutes } = require("./Routes/Vendor.Routes");
 
 
+
 require("dotenv").config();
 
 const app = express();
@@ -20,13 +21,13 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/otp', require('./Routes/otp.routes'));
 app.get("/", (req, res) => {
   res.send("Welcome");
 });
 
 
 
+app.use('/otp', require('./Routes/otp.routes'));
 
 
 
