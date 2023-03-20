@@ -43,6 +43,8 @@ const productSchema = new mongoose.Schema(
     items_left: { type: Number },
     sold_by_location: { type: String },
     sold_by: { type: String },
+    sku:{ type: String },
+    madeIn:{ type: String },
     emi: { type: Number },
 
     vendorId: {

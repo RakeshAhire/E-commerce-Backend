@@ -4,11 +4,11 @@ const { authenticate } = require("../middleware/authentication.middleware");
 const { AddressModel } = require("../Model/Address.model");
 const { ProductModel } = require("../Model/Product.Model");
 const { VendorModel } = require("../Model/vendor.model");
-const OrerRoutes = express.Router();
+const OrderRoutes = express.Router();
 const jwt = require("jsonwebtoken");
 const { OrderModel } = require("../Model/Order.Model");
 
-// OrerRoutes.get("/allproductdata", async (req, res) => {
+// OrderRoutes.get("/allproductdata", async (req, res) => {
 //   const order = req.query.order || "asc";
 //   try {
 
@@ -94,7 +94,7 @@ const { OrderModel } = require("../Model/Order.Model");
 //   }
 // });
 
-OrerRoutes.get("/", authenticate, async (req, res) => {
+OrderRoutes.get("/", authenticate, async (req, res) => {
   const payload = req.body;
   try {
     const product = await ProductModel.find({ userId: payload.userId });
@@ -109,7 +109,7 @@ OrerRoutes.get("/", authenticate, async (req, res) => {
   }
 });
 
-OrerRoutes.get("/vendororder",authenticate, async (req, res) => {
+OrderRoutes.get("/vendororder",authenticate, async (req, res) => {
 const token=req.headers.authorization;
 const decoded=jwt.verify(token, process.env.key);
   const id = req.params.id;
@@ -122,7 +122,7 @@ const decoded=jwt.verify(token, process.env.key);
   }
 });
 
-OrerRoutes.get("/vendortodayorder",authenticate, async (req, res) => {
+OrderRoutes.get("/vendortodayorder",authenticate, async (req, res) => {
 //     const s = '2023-03-20T11:50:26.404+00:00';
 //      const [y, m, d, hh, mm, ss, ms] = s.match(/\d+/g);
 //      const date = new Date(Date.UTC(y, m - 1, d, hh, mm, ss, ms));
@@ -140,7 +140,7 @@ OrerRoutes.get("/vendortodayorder",authenticate, async (req, res) => {
 
 
 
-OrerRoutes.get("/:id", async (req, res) => {
+OrderRoutes.get("/:id", async (req, res) => {
 
   const id = req.params.id;
   try {
@@ -151,7 +151,7 @@ OrerRoutes.get("/:id", async (req, res) => {
   }
 });
 
-OrerRoutes.post("/add", authMiddleware, async (req, res) => {
+OrderRoutes.post("/add", authMiddleware, async (req, res) => {
   let data = req.body;
   const token = req.headers.authorization;
   const product = await ProductModel.findOne({ _id: data.productId });
@@ -181,7 +181,7 @@ OrerRoutes.post("/add", authMiddleware, async (req, res) => {
   }
 });
 
-OrerRoutes.patch("/update/:id", authenticate, async (req, res) => {
+OrderRoutes.patch("/update/:id", authenticate, async (req, res) => {
   const Id = req.params.id;
   const payload = req.body;
 
@@ -203,7 +203,7 @@ OrerRoutes.patch("/update/:id", authenticate, async (req, res) => {
   }
 });
 
-OrerRoutes.delete("/delete/:id", authenticate, async (req, res) => {
+OrderRoutes.delete("/delete/:id", authenticate, async (req, res) => {
   const Id = req.params.id;
   const note = await ProductModel.findOne({ _id: Id });
   const hotelId = note.created_by;
@@ -222,5 +222,5 @@ OrerRoutes.delete("/delete/:id", authenticate, async (req, res) => {
 });
 
 module.exports = {
-  OrerRoutes,
+  OrderRoutes,
 };
