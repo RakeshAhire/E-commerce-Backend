@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema(
     }
     ],
     materialUsed:{ type: String },
-    description: [
+    description: 
       { 
       heading: {type:String}, 
       bullet_points: [
@@ -26,7 +26,7 @@ const productSchema = new mongoose.Schema(
       ],
       ending:{type:String}
      }
-  ],
+    ,
   additionalinfo:[
     { type: String }
   ],
