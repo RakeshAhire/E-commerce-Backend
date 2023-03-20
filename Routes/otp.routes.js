@@ -68,7 +68,7 @@ router.post("/verify", async (req, res) => {
     }
 
     // Delete the OTP code from the database
-    await otp.delete();
+    // await otp.delete();
 
     // Generate a JWT token for the user
     const token = jwt.sign(

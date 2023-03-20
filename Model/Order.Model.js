@@ -6,18 +6,16 @@ const orderSchema = new mongoose.Schema(
     title: { type: String, required: true },
     image: { type: String, required: true },
     price: { type: Number, required: true },
+    totalPrice:{ type: Number, required: true },
     discountPrice:{ type: Number, required: true },
-    deleveryDate:{ type: Number, required: true },
     color:{ type: String, required: true },
-    offer:[ {type: String}],
-    shipping: { type: String, required: true },
+    paymentmode:{ type: String, required: true },
+    ispaid:{ type: String, required: true,default:"false" },
     quantity: { type: Number, default: 1, min: 1 },
-    shipped: { type: String,default:"false"},
-    dispatch: { type: String,default:"false"},
-    payment: { type: String,default:"false"},
+    status: { type: String,default:"placed",required: true },
     addressId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "product",
+        ref: "address",
         required: true,
       },
     productId: {
@@ -30,6 +28,11 @@ const orderSchema = new mongoose.Schema(
       ref: "user",
       required: true,
     },
+    vendorId:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "vendor",
+      required: true,
+    },
   },
   {
     versionKey: false,
@@ -37,8 +40,8 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-const CartModel = mongoose.model("order", orderSchema);
+const OrderModel = mongoose.model("order", orderSchema);
 
 module.exports = {
-    CartModel
+    OrderModel
   };

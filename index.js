@@ -6,6 +6,7 @@ const { CommentRoutes } = require("./Routes/Comment.Routes");
 const { AddressRoutes } = require("./Routes/Address.Routes");
 const { CartRoutes } = require("./Routes/Cart.Routes");
 const { VendorRoutes } = require("./Routes/Vendor.Routes");
+const { OrerRoutes } = require("./Routes/order.Routes");
 
 
 
@@ -37,6 +38,7 @@ app.use("/product", ProductRoutes);
 app.use("/comment", CommentRoutes);
 app.use("/cart", CartRoutes);
 app.use("/address", AddressRoutes);
+app.use("/order",OrerRoutes)
 
 app.listen(process.env.port, async () => {
   try {

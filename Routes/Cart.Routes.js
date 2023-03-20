@@ -3,8 +3,7 @@ const authMiddleware = require("../middleware/auth.middleware");
 const { authenticate } = require("../middleware/authentication.middleware");
 const { CartModel } = require("../Model/Cart.Model");
 const CartRoutes = express.Router();
-
-
+const jwt = require("jsonwebtoken");
 
 CartRoutes.get("/allproductdata", async (req, res) => {
   const order = req.query.order || "asc";
@@ -19,7 +18,7 @@ CartRoutes.get("/allproductdata", async (req, res) => {
         colour: { $regex: req.query.color, $options: "i" },
       });
       res.send({ data: color, total: color.length });
-    } else if ((req.query.max) && (req.query.min)) {
+    } else if (req.query.max && req.query.min) {
       const data = await CartModel.find({
         price: { $gt: req.query.max, $lt: req.query.min },
       });
@@ -33,11 +32,14 @@ CartRoutes.get("/allproductdata", async (req, res) => {
   }
 });
 
-CartRoutes.get("/", async (req, res) => {
-  const payload = req.body;
+CartRoutes.get("/", authMiddleware, async (req, res) => {
+  const token = req.headers.authorization;
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  req.body.userId = decoded.userId;
+  console.log(token);
   try {
-    const product = await CartModel.find({ userId: payload.userId });
-    res.send({ data: product,Total:product.length });
+    const product = await CartModel.find({ userId: decoded.userId });
+    res.send({ data: product, Total: product.length });
   } catch (error) {
     console.log("error", error);
     res.status(500).send({
@@ -47,7 +49,7 @@ CartRoutes.get("/", async (req, res) => {
   }
 });
 
-CartRoutes.get("/:id",  async (req, res) => {
+CartRoutes.get("/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const product = await CartModel.findById(id);
@@ -62,14 +64,13 @@ CartRoutes.post("/add", authMiddleware, async (req, res) => {
   // console.log(payload)
   try {
     let data1 = new CartModel(payload);
-    console.log(data1)
+    console.log(data1);
     let saved = await data1.save();
     res.send({ msg: "Your item is Added" });
   } catch (err) {
     res.send(err);
   }
 });
-
 
 CartRoutes.patch("/update/:id", async (req, res) => {
   const Id = req.params.id;
