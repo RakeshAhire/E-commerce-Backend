@@ -1,5 +1,5 @@
 const express = require("express");
-const { ContactModel } = require("../Model/contact.model");
+const { ContactModel } = require("../Model/Contact.model");
 
 
 const ContactRoutes = express.Router();
