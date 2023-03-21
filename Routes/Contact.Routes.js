@@ -51,7 +51,6 @@ contactRoutes.delete("/delete/:id", async (req, res) => {
   const Id = req.params.id;
  
   try {
-  
       await ContactModel.findByIdAndDelete({ _id: Id });
       res.send("Deleted Your Address");
   } catch (err) {

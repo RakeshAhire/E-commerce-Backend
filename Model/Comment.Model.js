@@ -4,10 +4,16 @@ const CommentSchema = new mongoose.Schema(
   {
     comment: { type: String },
     rating: { type: Number },
+    username:{ type: String },
+    image:{ type: String },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "vendor",
+      ref: "user",
     },
+    product_id:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "product",
+    }
   },
 
   {

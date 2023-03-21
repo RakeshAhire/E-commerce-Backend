@@ -4,7 +4,8 @@ const {CommentModel}=require("../Model/Comment.Model")
 const CommentRoutes = express.Router();
 const { authenticate } = require("../middleware/authentication.middleware");
 const authMiddleware = require("../middleware/auth.middleware");
-
+const jwt = require("jsonwebtoken");
+const OtpModel = require("../Model/otp.model");
 
 CommentRoutes.get("/allcomment", async (req, res) => {
   try {
@@ -49,14 +50,36 @@ CommentRoutes.get("/:id", async (req, res) => {
 
 
 CommentRoutes.post("/add", authMiddleware, async (req, res) => {
+
   let payload = req.body;
-  // console.log(payload)
+  const token = req.headers.authorization;
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  
+  const data=await OtpModel({_id:decoded.userId})
+  const name=data.name
+   const d=(JSON.stringify(data._id))
+  const e=(JSON.stringify(decoded.userId))
+  // console.log(d)
+  console.log(name)
   try {
-    let data1 = new CommentModel(payload);
-    console.log(data1)
+    if(d==e){
+
+   
+    let data1 = new CommentModel({
+      comment:payload.comment,
+      rating:payload.rating,
+      username:data.name,
+      image:payload.image,
+      userId:decoded.userId,
+      productId:payload.productId
+    });
+    // console.log(data1)
     let saved = await data1.save();
     res.send({ msg: "Your Comment is Added" });
-  } catch (err) {
+  }else{
+    res.send({ msg: "Your Comment is not Added" });
+  }
+ } catch (err) {
     res.send(err);
   }
 });
