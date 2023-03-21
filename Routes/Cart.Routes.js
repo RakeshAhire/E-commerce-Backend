@@ -60,6 +60,8 @@ CartRoutes.get("/:id", async (req, res) => {
 });
 
 CartRoutes.post("/add", authMiddleware, async (req, res) => {
+  const token = req.headers.authorization;
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
   let payload = req.body;
   // console.log(payload)
   try {
