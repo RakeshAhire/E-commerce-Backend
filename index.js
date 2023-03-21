@@ -9,7 +9,7 @@ const { CartRoutes } = require("./Routes/Cart.Routes");
 const { VendorRoutes } = require("./Routes/Vendor.Routes");
 const { OrderRoutes } = require("./Routes/order.Routes");
 const ImageRoutes = require("./Routes/Image.Routes");
-const { contactRoutes } = require("./Routes/Contact.Routes");
+
 const { EmailRoutes } = require("./Routes/Email.Routes");
 
 require("dotenv").config();
@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 app.use("/otp", require("./Routes/otp.routes"));
 app.use("/email", EmailRoutes);
 
-app.use("/contact", contactRoutes);
+
 app.use("/img", ImageRoutes);
 app.use("/vendor", VendorRoutes);
 
