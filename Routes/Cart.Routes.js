@@ -64,7 +64,7 @@ CartRoutes.post("/add", authMiddleware, async (req, res) => {
   // console.log(payload)
   try {
     let data1 = new CartModel(payload);
-    console.log(data1);
+    // console.log(data1);
     let saved = await data1.save();
     res.send({ msg: "Your item is Added" });
   } catch (err) {
@@ -72,17 +72,17 @@ CartRoutes.post("/add", authMiddleware, async (req, res) => {
   }
 });
 
-CartRoutes.patch("/update/:id", async (req, res) => {
+CartRoutes.patch("/update/:id",authMiddleware, async (req, res) => {
   const Id = req.params.id;
   const payload = req.body;
+  const token = req.headers.authorization;
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  const hotel = await CartModel.findOne({ _id: Id });
-
-  const hotelId = hotel.created_by;
-  console.log(hotelId);
-  const userId_making_req = req.body.created_by;
+  const data = await CartModel.findOne({ _id: Id });
+  const d=(JSON.stringify(data.userId))
+  const e=(JSON.stringify(decoded.userId))
   try {
-    if (userId_making_req !== hotelId) {
+    if (d !== e) {
       res.send({ msg: "You are not authorized" });
     } else {
       await CartModel.findByIdAndUpdate({ _id: Id }, payload);
@@ -94,17 +94,22 @@ CartRoutes.patch("/update/:id", async (req, res) => {
   }
 });
 
-CartRoutes.delete("/delete/:id", async (req, res) => {
+CartRoutes.delete("/delete/:id",authMiddleware, async (req, res) => {
   const Id = req.params.id;
-  const note = await CartModel.findOne({ _id: Id });
-  const hotelId = note.created_by;
-  const userId_making_req = req.body.created_by;
+  const token = req.headers.authorization;
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+  const data = await CartModel.findOne({ _id: Id });
+  const d=(JSON.stringify(data.userId))
+  const e=(JSON.stringify(decoded.userId))
+  console.log(d)
+  console.log(e)
   try {
-    if (userId_making_req !== hotelId) {
-      res.send({ msg: "You are not Recognized" });
+    if (d !== e) {
+      res.send({ msg: "You are not authorized" });
     } else {
       await CartModel.findByIdAndDelete({ _id: Id });
-      res.send("Deleted the Hotel Data");
+      res.send("Deleted your item");
     }
   } catch (err) {
     console.log(err);
