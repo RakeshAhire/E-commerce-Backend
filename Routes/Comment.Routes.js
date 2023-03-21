@@ -6,7 +6,7 @@ const { authenticate } = require("../middleware/authentication.middleware");
 const authMiddleware = require("../middleware/auth.middleware");
 
 
-CommentRoutes.get("/", authenticate, async (req, res) => {
+CommentRoutes.get("/allcomment", async (req, res) => {
   try {
     const product = await CommentModel.find();
     res.send({ data: product });
@@ -17,6 +17,20 @@ CommentRoutes.get("/", authenticate, async (req, res) => {
     });
   }
 });
+CommentRoutes.get("/", async (req, res) => {
+  try {
+    const product = await CommentModel.find();
+    res.send({ data: product });
+  } catch (error) {
+    res.status(500).send({
+      error: true,
+      msg: "something went wrong",
+    });
+  }
+});
+
+
+
 
 CommentRoutes.get("/:id", async (req, res) => {
   const Id = req.params.id;
