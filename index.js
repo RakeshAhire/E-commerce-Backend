@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
   res.send("Welcome");
 });
 
-app.use("/contact",ContactRoutes)
+// app.use("/contact",ContactRoutes)
 
 app.use("/otp", require("./Routes/otp.routes"));
 app.use("/email", EmailRoutes);
