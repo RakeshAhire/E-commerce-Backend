@@ -6,7 +6,7 @@ const contactRoutes = express.Router();
 
 
 contactRoutes.get("/", async (req, res) => {
-  const payload = req.body;
+
   try {
     const product = await ContactModel.find();
     console.log(product);
