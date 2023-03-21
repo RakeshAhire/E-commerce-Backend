@@ -32,6 +32,7 @@ app.use("/otp", require("./Routes/otp.routes"));
 app.use("/email", EmailRoutes);
 
 
+
 app.use("/img", ImageRoutes);
 app.use("/vendor", VendorRoutes);
 

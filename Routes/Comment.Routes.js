@@ -6,6 +6,7 @@ const { authenticate } = require("../middleware/authentication.middleware");
 const authMiddleware = require("../middleware/auth.middleware");
 const jwt = require("jsonwebtoken");
 const OtpModel = require("../Model/otp.model");
+const { findById } = require("../Model/otp.model");
 
 CommentRoutes.get("/allcomment", async (req, res) => {
   try {
@@ -18,10 +19,13 @@ CommentRoutes.get("/allcomment", async (req, res) => {
     });
   }
 });
-CommentRoutes.get("/", async (req, res) => {
+
+
+CommentRoutes.get("/productcomment/:id", async (req, res) => {
+  const Id = req.params.id;
   try {
-    const product = await CommentModel.find();
-    res.send({ data: product });
+    const product = await CommentModel.find({ productId: Id });
+    res.send({ data: product,total:product.length });
   } catch (error) {
     res.status(500).send({
       error: true,
@@ -50,25 +54,21 @@ CommentRoutes.get("/:id", async (req, res) => {
 
 
 CommentRoutes.post("/add", authMiddleware, async (req, res) => {
-
+ 
   let payload = req.body;
   const token = req.headers.authorization;
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   
-  const data=await OtpModel({_id:decoded.userId})
-  const name=data.name
-   const d=(JSON.stringify(data._id))
-  const e=(JSON.stringify(decoded.userId))
-  // console.log(d)
-  console.log(name)
+  const data=await OtpModel.find({_id:decoded.userId})
+ 
+// const d=(data[0].name)
+// console.log(d)
   try {
-    if(d==e){
-
    
     let data1 = new CommentModel({
       comment:payload.comment,
       rating:payload.rating,
-      username:data.name,
+      username:data[0].name,
       image:payload.image,
       userId:decoded.userId,
       productId:payload.productId
@@ -76,25 +76,24 @@ CommentRoutes.post("/add", authMiddleware, async (req, res) => {
     // console.log(data1)
     let saved = await data1.save();
     res.send({ msg: "Your Comment is Added" });
-  }else{
-    res.send({ msg: "Your Comment is not Added" });
-  }
+  
  } catch (err) {
     res.send(err);
   }
 });
 
 
-CommentRoutes.patch("/update/:id", authenticate, async (req, res) => {
+CommentRoutes.patch("/update/:id", authMiddleware, async (req, res) => {
+  const user=(req.body.userId)
   const Id = req.params.id;
   const payload = req.body;
 
   const data = await CommentModel.findOne({ _id: Id });
-
-  const hotelId = data.created_by;
-  const userId_making_req = req.body.created_by;
+  const data1=data.userId
+  const a=(JSON.stringify(data1))
+  const b=(JSON.stringify(user))
   try {
-    if (userId_making_req !== hotelId) {
+    if (a !== b) {
       res.send({ msg: "You are not authorized" });
     } else {
       await CommentModel.findByIdAndUpdate({ _id: Id }, payload);
@@ -107,13 +106,17 @@ CommentRoutes.patch("/update/:id", authenticate, async (req, res) => {
 });
 
 CommentRoutes.delete("/delete/:id", authenticate, async (req, res) => {
+  const user=(req.body.userId)
   const Id = req.params.id;
-  const note = await CommentModel.findOne({ _id: Id });
-  const hotelId = note.created_by;
-  const userId_making_req = req.body.created_by;
+  const payload = req.body;
+
+  const data = await CommentModel.findOne({ _id: Id });
+  const data1=data.userId
+  const a=(JSON.stringify(data1))
+  const b=(JSON.stringify(user))
   try {
-    if (userId_making_req !== hotelId) {
-      res.send({ msg: "You are not Recognized" });
+    if (a !== b) {
+      res.send({ msg: "You are not authorized" });
     } else {
       await CommentModel.findByIdAndDelete({ _id: Id });
       res.send("Delete Your Comment");

@@ -8,9 +8,9 @@ const CommentSchema = new mongoose.Schema(
     image:{ type: String },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "vendor",
     },
-    product_id:{
+    productId:{
       type: mongoose.Schema.Types.ObjectId,
       ref: "product",
     }
