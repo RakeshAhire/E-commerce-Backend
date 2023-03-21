@@ -11,7 +11,7 @@ const { OrderRoutes } = require("./Routes/order.Routes");
 const ImageRoutes = require("./Routes/Image.Routes");
 
 const { EmailRoutes } = require("./Routes/Email.Routes");
-const { ContactRoutes } = require("./Routes/Contact.Routes");
+// const { ContactRoutes } = require("./Routes/Contact.Routes");
 
 require("dotenv").config();
 
