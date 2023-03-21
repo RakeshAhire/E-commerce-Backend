@@ -11,6 +11,7 @@ const { OrderRoutes } = require("./Routes/order.Routes");
 const ImageRoutes = require("./Routes/Image.Routes");
 
 const { EmailRoutes } = require("./Routes/Email.Routes");
+const { ContactRoutes } = require("./Routes/Contact.Routes");
 
 require("dotenv").config();
 
@@ -28,8 +29,11 @@ app.get("/", (req, res) => {
   res.send("Welcome");
 });
 
+app.use("/contact",ContactRoutes)
+
 app.use("/otp", require("./Routes/otp.routes"));
 app.use("/email", EmailRoutes);
+
 
 
 
