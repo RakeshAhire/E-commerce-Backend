@@ -26,7 +26,7 @@ BlogRoutes.get("/", authenticate, async (req, res) => {
   try {
     const product = await BlogModel.find({ vendorId: payload.vendorId });
     console.log(product);
-    res.send({ data: product });
+    res.send({ data: product,total:product.length });
   } catch (error) {
     console.log("error", error);
     res.status(500).send({
@@ -57,28 +57,26 @@ BlogRoutes.get("/:id", async (req, res) => {
 });
 
 BlogRoutes.post("/add", authenticate, async (req, res) => {
-  try {
-    let data = req.body;
-    let data1 = new BlogModel(data);
-    let saved = await data1.save();
-
-    res.send({ msg: "Data Added" });
-  } catch (err) {
-    res.send({ msg: "could not add Data" });
-  }
-});
+    try {
+      let data = req.body;
+      let data1 = new BlogModel(data);
+      let saved = await data1.save();
+  
+      res.send({ msg: "Data Added" });
+    } catch (err) {
+      res.send({ msg: "could not add Data" });
+    }
+  });
 
 BlogRoutes.patch("/update/:id", authenticate, async (req, res) => {
   const Id = req.params.id;
   const payload = req.body;
 
-  const hotel = await BlogModel.findOne({ _id: Id });
+  const data = await BlogModel.findOne({ _id: Id });
+  console.log(data.vendorId)
 
-  const hotelId = hotel.created_by;
-  console.log(hotelId);
-  const vendorId_making_req = req.body.created_by;
   try {
-    if (vendorId_making_req !== hotelId) {
+    if (JSON.stringify(data.vendorId)!== JSON.stringify(req.body.vendorId)) {
       res.send({ msg: "You are not authorized" });
     } else {
       await BlogModel.findByIdAndUpdate({ _id: Id }, payload);
@@ -91,14 +89,16 @@ BlogRoutes.patch("/update/:id", authenticate, async (req, res) => {
 });
 
 BlogRoutes.delete("/delete/:id", authenticate, async (req, res) => {
-  const Id = req.params.id;
-  const note = await BlogModel.findOne({ _id: Id });
-  const hotelId = note.created_by;
-  const vendorId_making_req = req.body.created_by;
-  try {
-    if (vendorId_making_req !== hotelId) {
-      res.send({ msg: "You are not Recognized" });
-    } else {
+    const Id = req.params.id;
+    const payload = req.body;
+  
+    const data = await BlogModel.findOne({ _id: Id });
+    console.log(data.vendorId)
+  
+    try {
+      if (JSON.stringify(data.vendorId)!== JSON.stringify(req.body.vendorId)) {
+        res.send({ msg: "You are not authorized" });
+      } else {
       await BlogModel.findByIdAndDelete({ _id: Id });
       res.send("Deleted the Hotel Data");
     }

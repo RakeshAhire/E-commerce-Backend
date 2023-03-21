@@ -6,7 +6,7 @@ const BlogSchema = new mongoose.Schema(
     price: { type: Number },
     price_slab: { type: Number },
     date:{ type: Number },
-    month:{ type: Number },
+    month:{ type: String },
     unitPrice:{ type: Number },
     packedPrice:{ type: Number },
     avgrating: { type: Number },

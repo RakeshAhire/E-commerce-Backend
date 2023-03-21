@@ -7,120 +7,37 @@ const { VendorModel } = require("../Model/vendor.model");
 const OrderRoutes = express.Router();
 const jwt = require("jsonwebtoken");
 const { OrderModel } = require("../Model/Order.Model");
+OrderRoutes.get("/", authMiddleware, async (req, res) => {
+    const payload = req.body;  
+    try {
+      const product = await OrderModel.find({userId:payload.userId});
+    //   console.log(product);
+      res.send({ data: product });
+    } catch (error) {
+      console.log("error", error);
+      res.status(500).send({
+        error: true,
+        msg: "something went wrong",
+      });
+    }
+  });
 
-// OrderRoutes.get("/allproductdata", async (req, res) => {
-//   const order = req.query.order || "asc";
-//   try {
-
-//     if (req.query.colour && req.query.category && req.query.size && req.query.series) {
-//       const products = await ProductModel.find({
-//         series: { $regex: req.query.series, $options: "i" },
-//         category: { $regex: req.query.category, $options: "i" },
-//         colour: { $regex: req.query.colour, $options: "i" },
-//         size: { $regex: req.query.size, $options: "i" },
-//       });
-//       res.send({ data: products, total: products.length });
-//     }
-//     else if (req.query.colour && req.query.category && req.query.size ) {
-//       const products = await ProductModel.find({
-//         category: { $regex: req.query.category, $options: "i" },
-//         colour: { $regex: req.query.colour, $options: "i" },
-//         size: { $regex: req.query.size, $options: "i" },
-//       });
-//       res.send({ data: products, total: products.length });
-//     }
-//     else if (req.query.colour && req.query.category && req.query.series ) {
-//       const products = await ProductModel.find({
-//         category: { $regex: req.query.category, $options: "i" },
-//         colour: { $regex: req.query.colour, $options: "i" },
-//         series: { $regex: req.query.series, $options: "i" },
-//       });
-//       res.send({ data: products, total: products.length });
-//     }
-//     else if (req.query.size && req.query.category && req.query.series ) {
-//       const products = await ProductModel.find({
-//         category: { $regex: req.query.category, $options: "i" },
-//         size: { $regex: req.query.size, $options: "i" },
-//         series: { $regex: req.query.series, $options: "i" },
-//       });
-//       res.send({ data: products, total: products.length });
-//     }
-//      else if (req.query.size && req.query.category) {
-//       const products = await ProductModel.find({
-//         category: { $regex: req.query.category, $options: "i" },
-//         size: { $regex: req.query.size, $options: "i" },
-//       });
-//       res.send({ data: products, total: products.length });
-
-//     }
-//    else if (req.query.category&&req.query.color) {
-//       const color = await ProductModel.find({
-//         colour: { $regex: req.query.color, $options: "i" },
-//         category: { $regex: req.query.color, $options: "i" },
-//       });
-//       res.send({ data: color, total: color.length });
-//     } else if ( req.query.category &&  req.query.min && req.query.max)  {
-//       const data = await ProductModel.find({
-//         price: { $gt: req.query.min },
-//         price: { $lt: req.query.max },
-//         category: { $regex: req.query.category, $options: "i" },
-//       });
-//       res.send({ data: data, total: data.length });
-//     } else if (req.query.brand) {
-//       const products = await ProductModel.find({
-//         brand: { $regex: req.query.brand, $options: "i" },
-//       });
-//       res.send({ data: products, total: products.length });
-//     }
-//       else if (req.query.series &&req.query.category) {
-//         const series = await ProductModel.find({
-//           series: { $regex: req.query.series, $options: "i" },
-//           category: { $regex: req.query.category, $options: "i" },
-//         });
-//         res.send({ data: series, total: products.length });
-//     }
-//   else if ( req.query.category && req.query.min ) {
-//       const price = await ProductModel.find({
-//          price: { $gt: 1800, $lt: 2000 }
-//       });
-//       res.send({ data: price, total: products.length });
-//   }
-//     else {
-//       const product = await ProductModel.find();
-//       res.send({ data: product, total: product.length });
-//     }
-//   } catch (e) {
-//     return res.status(500).send(e.message);
-//   }
-// });
-
-OrderRoutes.get("/", authenticate, async (req, res) => {
-  const payload = req.body;
-  try {
-    const product = await ProductModel.find({ userId: payload.userId });
-    console.log(product);
-    res.send({ data: product });
-  } catch (error) {
-    console.log("error", error);
-    res.status(500).send({
-      error: true,
-      msg: "something went wrong",
-    });
-  }
-});
 
 OrderRoutes.get("/vendororder",authenticate, async (req, res) => {
-const token=req.headers.authorization;
-const decoded=jwt.verify(token, process.env.key);
-  const id = req.params.id;
+    const a=req.body.vendorId
+    console.log(a)
+
   try {
-    const product = await OrderModel.find({vendorId:decoded.vendorId});
+    const product = await OrderModel.find({vendorId:req.body.vendorId});
     // console.log(product)
     res.send({product,Total:product.length});
   } catch (error) {
     res.status(404).send({ msg: "something went wrong" });
   }
 });
+
+
+
 
 OrderRoutes.get("/vendortodayorder",authenticate, async (req, res) => {
 //     const s = '2023-03-20T11:50:26.404+00:00';
@@ -181,20 +98,44 @@ OrderRoutes.post("/add", authMiddleware, async (req, res) => {
   }
 });
 
-OrderRoutes.patch("/update/:id", authenticate, async (req, res) => {
-  const Id = req.params.id;
-  const payload = req.body;
-
-  const hotel = await ProductModel.findOne({ _id: Id });
-
-  const hotelId = hotel.created_by;
-  console.log(hotelId);
-  const vendorId_making_req = req.body.created_by;
-  try {
-    if (vendorId_making_req !== hotelId) {
-      res.send({ msg: "You are not authorized" });
+OrderRoutes.patch("/update/:id", authMiddleware, async (req, res) => {
+    const user=(req.body.userId)
+    const Id = req.params.id;
+    const payload = req.body;
+  
+    const data = await OrderModel.findOne({ _id: Id });
+    const data1=data.userId
+    const a=(JSON.stringify(data1))
+    const b=(JSON.stringify(user))
+    try {
+      if (a !== b) {
     } else {
-      await ProductModel.findByIdAndUpdate({ _id: Id }, payload);
+      await OrderModel.findByIdAndUpdate({ _id: Id }, payload);
+      res.send({ msg: "updated Sucessfully" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.send({ err: "Something went wrong" });
+  }
+});
+
+OrderRoutes.patch("/changestatus/:id", authenticate, async (req, res) => {
+    const user=(req.body.vendorId)
+    // console.log(user)
+    const Id = req.params.id;
+    const payload = req.body;
+  
+    const data = await OrderModel.findOne({ _id: Id });
+    const data1=data.vendorId
+    const a=(JSON.stringify(data1))
+    const b=(JSON.stringify(user))
+    console.log(a)
+    console.log(b)
+    try {
+      if (a !== b) {
+        res.send({ msg: "You are not authorized" });
+    } else {
+      await OrderModel.findByIdAndUpdate({ _id: Id }, payload);
       res.send({ msg: "updated Sucessfully" });
     }
   } catch (err) {
@@ -204,15 +145,18 @@ OrderRoutes.patch("/update/:id", authenticate, async (req, res) => {
 });
 
 OrderRoutes.delete("/delete/:id", authenticate, async (req, res) => {
-  const Id = req.params.id;
-  const note = await ProductModel.findOne({ _id: Id });
-  const hotelId = note.created_by;
-  const vendorId_making_req = req.body.created_by;
-  try {
-    if (vendorId_making_req !== hotelId) {
-      res.send({ msg: "You are not Recognized" });
+    const user=(req.body.userId)
+    const Id = req.params.id;
+    const payload = req.body;
+  
+    const data = await OrderModel.findOne({ _id: Id });
+    const data1=data.userId
+    const a=(JSON.stringify(data1))
+    const b=(JSON.stringify(user))
+    try {
+      if (a !== b) {
     } else {
-      await ProductModel.findByIdAndDelete({ _id: Id });
+      await OrderModel.findByIdAndDelete({ _id: Id });
       res.send("Deleted the Hotel Data");
     }
   } catch (err) {

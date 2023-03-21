@@ -35,17 +35,21 @@ router.post("/send", async (req, res) => {
     // Send the OTP code to the user's phone number using Twilio
     const message = `Your verification code is: ${otpCode}`;
     // const twilioResponse = await twilio.messages.create({ body: message, from: process.env.TWILIO_PHONE_NUMBER, to: phoneNumber });
-    const twilioResponse = await client.messages.create({
-      body: `Your OTP to login is ${otp}`,
-      from: "+12766002036",
-      statusCallback: "http://postb.in/1234abcd",
-      to: `+91${phoneNumber}`,
-    });
+    // const twilioResponse = await client.messages.create({
+    //   body: `Your OTP to login is ${otp}`,
+    //   from: "+12766002036",
+    //   statusCallback: "http://postb.in/1234abcd",
+    //   to: `+91${phoneNumber}`,
+    // });
 
-    res.json({
-      message: "OTP sent successfully",
-      messageId: twilioResponse.sid,
-    });
+    // res.json({
+    //   message: "OTP sent successfully",
+    //   messageId: twilioResponse.sid,
+    //   otp:message
+    // });
+    res.send({
+      message
+    })
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });
