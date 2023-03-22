@@ -24,8 +24,7 @@ OrderRoutes.get("/", authMiddleware, async (req, res) => {
 
 
 OrderRoutes.get("/vendororder",authenticate, async (req, res) => {
-    const a=req.body.vendorId
-    console.log(a)
+
 
   try {
     const product = await OrderModel.find({vendorId:req.body.vendorId});
@@ -129,8 +128,7 @@ OrderRoutes.patch("/changestatus/:id", authenticate, async (req, res) => {
     const data1=data.vendorId
     const a=(JSON.stringify(data1))
     const b=(JSON.stringify(user))
-    console.log(a)
-    console.log(b)
+   
     try {
       if (a !== b) {
         res.send({ msg: "You are not authorized" });

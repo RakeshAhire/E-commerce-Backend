@@ -5,13 +5,18 @@ const ProductRoutes = express.Router();
 const { ProductModel } = require("../Model/Product.Model");
 
 ProductRoutes.get("/allproductdata", async (req, res) => {
-  const order = req.query.order || "asc";
+ 
   try {
-
     // category,Price,colour,size,price
 
-
-    if ( req.query.category && req.query.colour &&  req.query.size && req.query.series && req.query.min && req.query.max) {
+    if (
+      req.query.category &&
+      req.query.colour &&
+      req.query.size &&
+      req.query.series &&
+      req.query.min &&
+      req.query.max
+    ) {
       const products = await ProductModel.find({
         series: { $regex: req.query.series, $options: "i" },
         category: { $regex: req.query.category, $options: "i" },
@@ -21,174 +26,212 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         price: { $lt: req.query.max },
       });
       res.send({ data: products, total: products.length });
-    } 
-
-    // category,Price,colour,size
-
-
-    else if (req.query.colour && req.query.category && req.query.size && req.query.series) {
-      const products = await ProductModel.find({
-        series: { $regex: req.query.series, $options: "i" },
-        category: { $regex: req.query.category, $options: "i" },
-        colour: { $regex: req.query.colour, $options: "i" },
-        size: { $regex: req.query.size, $options: "i" },
-      });
-      res.send({ data: products, total: products.length });
-    } 
-
-       // category,Price,colour,size
-
-    else if (req.query.colour && req.query.category && req.query.size && req.query.min && req.query.max) {
-      const products = await ProductModel.find({
-        price: { $gt: req.query.min },
-        price: { $lt: req.query.max },
-        category: { $regex: req.query.category, $options: "i" },
-        colour: { $regex: req.query.colour, $options: "i" },
-        size: { $regex: req.query.size, $options: "i" },
-      });
-      res.send({ data: products, total: products.length });
-    } 
-
- // category,Price,colour,size
-
-    else if (req.query.colour && req.query.category && req.query.size && req.query.max &&  req.query.min) {
-      const products = await ProductModel.find({
-        category: { $regex: req.query.category, $options: "i" },
-        colour: { $regex: req.query.colour, $options: "i" },
-        size: { $regex: req.query.size, $options: "i" },
-        price: { $gt: req.query.min },
-        price: { $lt: req.query.max },
-      });
-      res.send({ data: products, total: products.length });
-    } 
-
-     // category,colour,series
-
-
-    else if (req.query.colour && req.query.category && req.query.series ) {
-      const products = await ProductModel.find({
-        category: { $regex: req.query.category, $options: "i" },
-        colour: { $regex: req.query.colour, $options: "i" },
-        series: { $regex: req.query.series, $options: "i" },
-      });
-      res.send({ data: products, total: products.length });
-    } 
-
-      // category,size,series
-
-
-    else if (req.query.size && req.query.category && req.query.series ) {
-      const products = await ProductModel.find({
-        category: { $regex: req.query.category, $options: "i" },
-        size: { $regex: req.query.size, $options: "i" },
-        series: { $regex: req.query.series, $options: "i" },
-      });
-      res.send({ data: products, total: products.length });
-    } 
-
-
-      // category,colour,series
-
-      else if (req.query.colour && req.query.category  && req.query.series) {
-        const products = await ProductModel.find({
-          series: { $regex: req.query.series, $options: "i" },
-          category: { $regex: req.query.category, $options: "i" },
-          colour: { $regex: req.query.colour, $options: "i" },
-        });
-        res.send({ data: products, total: products.length });
-      } 
-
-      // category,size ,price
-
-      else if ( req.query.category &&  req.query.size &&  req.query.min && req.query.max) {
-        const products = await ProductModel.find({
-          category: { $regex: req.query.category, $options: "i" },
-          size: { $regex: req.query.size, $options: "i" },
-          price: { $gt: req.query.min },
-          price: { $lt: req.query.max },
-        });
-        res.send({ data: products, total: products.length });
-      } 
-
-      // category,color ,price
-
-      else if ( req.query.category && req.query.colour &&  req.query.min && req.query.max) {
-        const products = await ProductModel.find({
-          category: { $regex: req.query.category, $options: "i" },
-          colour: { $regex: req.query.colour, $options: "i" },
-          price: { $gt: req.query.min },
-          price: { $lt: req.query.max },
-        });
-        res.send({ data: products, total: products.length });
-      } 
-
-
-      // category,series ,price
-
-      else if ( req.query.category && req.query.series &&  req.query.min && req.query.max) {
-        const products = await ProductModel.find({
-          category: { $regex: req.query.category, $options: "i" },
-          series: { $regex: req.query.series, $options: "i" },
-          price: { $gt: req.query.min },
-          price: { $lt: req.query.max },
-        });
-        res.send({ data: products, total: products.length });
-      } 
- 
-      //category,size
-
-
-     else if (req.query.size && req.query.category) {
-      const products = await ProductModel.find({
-        category: { $regex: req.query.category, $options: "i" },
-        size: { $regex: req.query.size, $options: "i" },
-      });
-      res.send({ data: products, total: products.length });
-
     }
 
-     //category,color
+    // category,Price,colour,size
+    else if (
+      req.query.colour &&
+      req.query.category &&
+      req.query.size &&
+      req.query.series
+    ) {
+      const products = await ProductModel.find({
+        series: { $regex: req.query.series, $options: "i" },
+        category: { $regex: req.query.category, $options: "i" },
+        colour: { $regex: req.query.colour, $options: "i" },
+        size: { $regex: req.query.size, $options: "i" },
+      });
+      res.send({ data: products, total: products.length });
+    }
 
+    // category,Price,colour,size
+    else if (
+      req.query.colour &&
+      req.query.category &&
+      req.query.size &&
+      req.query.min &&
+      req.query.max
+    ) {
+      const products = await ProductModel.find({
+        price: { $gt: req.query.min },
+        price: { $lt: req.query.max },
+        category: { $regex: req.query.category, $options: "i" },
+        colour: { $regex: req.query.colour, $options: "i" },
+        size: { $regex: req.query.size, $options: "i" },
+      });
+      res.send({ data: products, total: products.length });
+    }
 
-   else if (req.query.category&&req.query.color) {
+    // category,Price,colour,size
+    else if (
+      req.query.colour &&
+      req.query.category &&
+      req.query.size &&
+      req.query.max &&
+      req.query.min
+    ) {
+      const products = await ProductModel.find({
+        category: { $regex: req.query.category, $options: "i" },
+        colour: { $regex: req.query.colour, $options: "i" },
+        size: { $regex: req.query.size, $options: "i" },
+        price: { $gt: req.query.min },
+        price: { $lt: req.query.max },
+      });
+      res.send({ data: products, total: products.length });
+    }
+
+    // category,colour,series
+    else if (req.query.colour && req.query.category && req.query.series) {
+      const products = await ProductModel.find({
+        category: { $regex: req.query.category, $options: "i" },
+        colour: { $regex: req.query.colour, $options: "i" },
+        series: { $regex: req.query.series, $options: "i" },
+      });
+      res.send({ data: products, total: products.length });
+    }
+
+    // category,size,series
+    else if (req.query.size && req.query.category && req.query.series) {
+      const products = await ProductModel.find({
+        category: { $regex: req.query.category, $options: "i" },
+        size: { $regex: req.query.size, $options: "i" },
+        series: { $regex: req.query.series, $options: "i" },
+      });
+      res.send({ data: products, total: products.length });
+    }
+
+    // category,colour,series
+    else if (req.query.colour && req.query.category && req.query.series) {
+      const products = await ProductModel.find({
+        series: { $regex: req.query.series, $options: "i" },
+        category: { $regex: req.query.category, $options: "i" },
+        colour: { $regex: req.query.colour, $options: "i" },
+      });
+      res.send({ data: products, total: products.length });
+    }
+
+    // category,size ,price
+    else if (
+      req.query.category &&
+      req.query.size &&
+      req.query.min &&
+      req.query.max
+    ) {
+      const products = await ProductModel.find({
+        category: { $regex: req.query.category, $options: "i" },
+        size: { $regex: req.query.size, $options: "i" },
+        price: { $gt: req.query.min },
+        price: { $lt: req.query.max },
+      });
+      res.send({ data: products, total: products.length });
+    }
+
+    // category,color ,price
+    else if (
+      req.query.category &&
+      req.query.colour &&
+      req.query.min &&
+      req.query.max
+    ) {
+      const products = await ProductModel.find({
+        category: { $regex: req.query.category, $options: "i" },
+        colour: { $regex: req.query.colour, $options: "i" },
+        price: { $gt: req.query.min },
+        price: { $lt: req.query.max },
+      });
+      res.send({ data: products, total: products.length });
+    }
+
+    // category,series ,price
+    else if (
+      req.query.category &&
+      req.query.series &&
+      req.query.min &&
+      req.query.max
+    ) {
+      const products = await ProductModel.find({
+        category: { $regex: req.query.category, $options: "i" },
+        series: { $regex: req.query.series, $options: "i" },
+        price: { $gt: req.query.min },
+        price: { $lt: req.query.max },
+      });
+      res.send({ data: products, total: products.length });
+    }
+
+    //category,size
+    else if (req.query.size && req.query.category) {
+      const products = await ProductModel.find({
+        category: { $regex: req.query.category, $options: "i" },
+        size: { $regex: req.query.size, $options: "i" },
+      });
+      res.send({ data: products, total: products.length });
+    }
+
+    //category,color
+    else if (req.query.category && req.query.color) {
       const color = await ProductModel.find({
         colour: { $regex: req.query.color, $options: "i" },
         category: { $regex: req.query.color, $options: "i" },
       });
       res.send({ data: color, total: color.length });
-    } 
-    
-     //category,price
+    }
 
-    else if ( req.query.category &&  req.query.min && req.query.max)  {
+    //category,price
+    else if (req.query.category && req.query.min && req.query.max) {
       const data = await ProductModel.find({
         price: { $gt: req.query.min },
         price: { $lt: req.query.max },
         category: { $regex: req.query.category, $options: "i" },
       });
       res.send({ data: data, total: data.length });
-
     }
-    
-     //category,series
 
-    else if ( req.query.category &&  req.query.series)  {
+    //category,series
+    else if (req.query.category && req.query.series) {
       const data = await ProductModel.find({
         series: { $regex: req.query.series, $options: "i" },
         category: { $regex: req.query.category, $options: "i" },
       });
       res.send({ data: data, total: data.length });
-    }
 
+       //category,Price
 
-    else if (req.query.brand) {
+    } else if (req.query.category && req.query.sort) {
+      const order = req.query.sort || "asc";
+      if(order==="asc"){
+        const products = await ProductModel.find({})
+            .sort({ price: order })
+            .lean()
+            .exec();
+          res.status(200).send({products,total:products.length});
+
+      }else{
+        const a={order:1}
+        const products = await ProductModel.find()
+            .sort(a)
+            .lean()
+            .exec();
+          res.status(200).send({products,total:products.length});
+      }
+  
+          
+          
+      
+    } else if (req.query.brand) {
       const products = await ProductModel.find({
         brand: { $regex: req.query.brand, $options: "i" },
       });
       res.send({ data: products, total: products.length });
-    }
-      
-    else {
+    } else if (req.query.q) {
+      let products = await ProductModel.find({
+        title: { $regex: req.query.q, $options: "i" },
+      });
+      products = await ProductModel.find({
+        title: { $regex: req.query.q, $options: "i" },
+      });
+
+      res.send({ data: products, total: products.length });
+    } else {
       const product = await ProductModel.find();
       res.send({ data: product, total: product.length });
     }
