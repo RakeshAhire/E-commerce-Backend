@@ -59,29 +59,35 @@ CartRoutes.get("/:id", async (req, res) => {
 });
 
 CartRoutes.post("/add", authMiddleware, async (req, res) => {
-  const token = req.headers.authorization;
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
   let payload = req.body;
   // console.log(payload)
   try {
-    let data1 = new CartModel(payload);
-    // console.log(data1);
-    let saved = await data1.save();
-    res.send({ msg: "Your item is Added" });
+    let cartItem = await CartModel.findOne({ productId:payload.productId });
+
+    if (cartItem) {
+      cartItem.quantity += 1;
+      await cartItem.save();
+      res.send({ msg: "Your item is Inc" });
+    } else {
+      let data1 = new CartModel(payload);
+      // console.log(data1);
+      let saved = await data1.save();
+      res.send({ msg: "Your item is Added" });
+    }
   } catch (err) {
     res.send(err);
   }
 });
 
-CartRoutes.patch("/update/:id",authMiddleware, async (req, res) => {
+CartRoutes.patch("/update/:id", authMiddleware, async (req, res) => {
   const Id = req.params.id;
   const payload = req.body;
   const token = req.headers.authorization;
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
   const data = await CartModel.findOne({ _id: Id });
-  const d=(JSON.stringify(data.userId))
-  const e=(JSON.stringify(decoded.userId))
+  const d = JSON.stringify(data.userId);
+  const e = JSON.stringify(decoded.userId);
   try {
     if (d !== e) {
       res.send({ msg: "You are not authorized" });
@@ -95,16 +101,16 @@ CartRoutes.patch("/update/:id",authMiddleware, async (req, res) => {
   }
 });
 
-CartRoutes.delete("/delete/:id",authMiddleware, async (req, res) => {
+CartRoutes.delete("/delete/:id", authMiddleware, async (req, res) => {
   const Id = req.params.id;
   const token = req.headers.authorization;
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
   const data = await CartModel.findOne({ _id: Id });
-  const d=(JSON.stringify(data.userId))
-  const e=(JSON.stringify(decoded.userId))
-  console.log(d)
-  console.log(e)
+  const d = JSON.stringify(data.userId);
+  const e = JSON.stringify(decoded.userId);
+  console.log(d);
+  console.log(e);
   try {
     if (d !== e) {
       res.send({ msg: "You are not authorized" });

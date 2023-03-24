@@ -5,7 +5,6 @@ const ProductRoutes = express.Router();
 const { ProductModel } = require("../Model/Product.Model");
 
 ProductRoutes.get("/allproductdata", async (req, res) => {
- 
   try {
     // category,Price,colour,size,price
 
@@ -22,8 +21,8 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         category: { $regex: req.query.category, $options: "i" },
         colour: { $regex: req.query.colour, $options: "i" },
         size: { $regex: req.query.size, $options: "i" },
-        price: { $gt: req.query.min },
-        price: { $lt: req.query.max },
+        packedPrice: { $gt: req.query.min },
+        packedPrice: { $lt: req.query.max },
       });
       res.send({ data: products, total: products.length });
     }
@@ -53,8 +52,8 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       req.query.max
     ) {
       const products = await ProductModel.find({
-        price: { $gt: req.query.min },
-        price: { $lt: req.query.max },
+        packedPrice: { $gt: req.query.min },
+        packedPrice: { $lt: req.query.max },
         category: { $regex: req.query.category, $options: "i" },
         colour: { $regex: req.query.colour, $options: "i" },
         size: { $regex: req.query.size, $options: "i" },
@@ -74,8 +73,8 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         category: { $regex: req.query.category, $options: "i" },
         colour: { $regex: req.query.colour, $options: "i" },
         size: { $regex: req.query.size, $options: "i" },
-        price: { $gt: req.query.min },
-        price: { $lt: req.query.max },
+        packedPrice: { $gt: req.query.min },
+        packedPrice: { $lt: req.query.max },
       });
       res.send({ data: products, total: products.length });
     }
@@ -120,8 +119,8 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
         size: { $regex: req.query.size, $options: "i" },
-        price: { $gt: req.query.min },
-        price: { $lt: req.query.max },
+        packedPrice: { $gt: req.query.min },
+        packedPrice: { $lt: req.query.max },
       });
       res.send({ data: products, total: products.length });
     }
@@ -136,8 +135,8 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
         colour: { $regex: req.query.colour, $options: "i" },
-        price: { $gt: req.query.min },
-        price: { $lt: req.query.max },
+        packedPrice: { $gt: req.query.min },
+        packedPrice: { $lt: req.query.max },
       });
       res.send({ data: products, total: products.length });
     }
@@ -152,8 +151,8 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
         series: { $regex: req.query.series, $options: "i" },
-        price: { $gt: req.query.min },
-        price: { $lt: req.query.max },
+        packedPrice: { $gt: req.query.min },
+        packedPrice: { $lt: req.query.max },
       });
       res.send({ data: products, total: products.length });
     }
@@ -194,30 +193,38 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       });
       res.send({ data: data, total: data.length });
 
-       //category,Price
-
-    } else if (req.query.category && req.query.sort) {
-      const order = req.query.sort || "asc";
-      if(order==="asc"){
+      //category,Price
+    } else if ( req.query.sort) {
+      const order = req.query.sort;
+      if (order === "asc") {
         const products = await ProductModel.find({})
-            .sort({ price: order })
-            .lean()
-            .exec();
-          res.status(200).send({products,total:products.length});
-
-      }else{
-        const a={order:1}
+          .sort({ packedPrice: order })
+          .lean()
+          .exec();
+        res.status(200).send({ products, total: products.length });
+      } else if (order == "dsc") {
         const products = await ProductModel.find()
-            .sort(a)
-            .lean()
-            .exec();
-          res.status(200).send({products,total:products.length});
+          .sort({ packedPrice: -1 })
+          .lean()
+          .exec();
+        res.status(200).send({ products, total: products.length });
       }
-  
-          
-          
-      
-    } else if (req.query.brand) {
+    } 
+    else if (req.query.q &&req.query.rating) {
+      let products = await ProductModel.find({
+        title: { $regex: req.query.q, $options: "i" },
+        rating: { $gt: req.query.rating },
+      });
+      res.send({ data: products, total: products.length });
+    } 
+    else if ( req.query.rating) {
+      const products = await ProductModel.find({
+
+        rating: { $gt: req.query.rating },
+      });
+      res.send({ data: products, total: products.length });
+    } 
+    else if (req.query.brand) {
       const products = await ProductModel.find({
         brand: { $regex: req.query.brand, $options: "i" },
       });
@@ -226,10 +233,6 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       let products = await ProductModel.find({
         title: { $regex: req.query.q, $options: "i" },
       });
-      products = await ProductModel.find({
-        title: { $regex: req.query.q, $options: "i" },
-      });
-
       res.send({ data: products, total: products.length });
     } else {
       const product = await ProductModel.find();
