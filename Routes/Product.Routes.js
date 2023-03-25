@@ -13,14 +13,14 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       req.query.colour &&
       req.query.size &&
       req.query.series &&
-      req.query.max
+      req.query.packedPrice
     ) {
       const products = await ProductModel.find({
         series: { $regex: req.query.series, $options: "i" },
         category: { $regex: req.query.category, $options: "i" },
         colour: { $regex: req.query.colour, $options: "i" },
         size: { $regex: req.query.size, $options: "i" },
-        packedPrice: { $lte: req.query.max },
+        packedPrice: { $lte: req.query.packedPrice },
       });
       res.send({ data: products, total: products.length });
     }
@@ -46,10 +46,10 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       req.query.colour &&
       req.query.category &&
       req.query.size &&
-      req.query.max
+      req.query.packedPrice
     ) {
       const products = await ProductModel.find({
-        packedPrice: { $lte: req.query.max },
+        packedPrice: { $lte: req.query.packedPrice },
         category: { $regex: req.query.category, $options: "i" },
         colour: { $regex: req.query.colour, $options: "i" },
         size: { $regex: req.query.size, $options: "i" },
@@ -62,13 +62,13 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       req.query.colour &&
       req.query.category &&
       req.query.size &&
-      req.query.max 
+      req.query.packedPrice 
     ) {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
         colour: { $regex: req.query.colour, $options: "i" },
         size: { $regex: req.query.size, $options: "i" },
-        packedPrice: { $lte: req.query.max },
+        packedPrice: { $lte: req.query.packedPrice },
       });
       res.send({ data: products, total: products.length });
     }
@@ -107,12 +107,12 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
     else if (
       req.query.category &&
       req.query.size &&
-      req.query.max
+      req.query.packedPrice
     ) {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
         size: { $regex: req.query.size, $options: "i" },
-        packedPrice: { $lte: req.query.max },
+        packedPrice: { $lte: req.query.packedPrice },
       });
       res.send({ data: products, total: products.length });
     }
@@ -121,12 +121,12 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
     else if (
       req.query.category &&
       req.query.colour &&
-      req.query.max
+      req.query.packedPrice
     ) {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
         colour: { $regex: req.query.colour, $options: "i" },
-        packedPrice: { $lte: req.query.max },
+        packedPrice: { $lte: req.query.packedPrice },
       });
       res.send({ data: products, total: products.length });
     }
@@ -135,12 +135,12 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
     else if (
       req.query.category &&
       req.query.series &&
-      req.query.max
+      req.query.packedPrice
     ) {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
         series: { $regex: req.query.series, $options: "i" },
-        packedPrice: { $lte: req.query.max },
+        packedPrice: { $lte: req.query.packedPrice },
       });
       res.send({ data: products, total: products.length });
     }
@@ -164,9 +164,9 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
     }
 
     //category,price
-    else if (req.query.category &&  req.query.max) {
+    else if (req.query.category &&  req.query.packedPrice) {
       const data = await ProductModel.find({
-        packedPrice: { $lte: req.query.max },
+        packedPrice: { $lte: req.query.packedPrice },
         category: { $regex: req.query.category, $options: "i" },
       });
       res.send({ data: data, total: data.length });
