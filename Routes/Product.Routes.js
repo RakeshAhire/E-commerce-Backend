@@ -20,7 +20,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         category: { $regex: req.query.category, $options: "i" },
         colour: { $regex: req.query.colour, $options: "i" },
         size: { $regex: req.query.size, $options: "i" },
-        packedPrice: { $lt: req.query.max },
+        packedPrice: { $lte: req.query.max },
       });
       res.send({ data: products, total: products.length });
     }
@@ -49,7 +49,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       req.query.max
     ) {
       const products = await ProductModel.find({
-        packedPrice: { $lt: req.query.max },
+        packedPrice: { $lte: req.query.max },
         category: { $regex: req.query.category, $options: "i" },
         colour: { $regex: req.query.colour, $options: "i" },
         size: { $regex: req.query.size, $options: "i" },
@@ -68,7 +68,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         category: { $regex: req.query.category, $options: "i" },
         colour: { $regex: req.query.colour, $options: "i" },
         size: { $regex: req.query.size, $options: "i" },
-        packedPrice: { $lt: req.query.max },
+        packedPrice: { $lte: req.query.max },
       });
       res.send({ data: products, total: products.length });
     }
@@ -112,7 +112,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
         size: { $regex: req.query.size, $options: "i" },
-        packedPrice: { $lt: req.query.max },
+        packedPrice: { $lte: req.query.max },
       });
       res.send({ data: products, total: products.length });
     }
@@ -126,7 +126,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
         colour: { $regex: req.query.colour, $options: "i" },
-        packedPrice: { $lt: req.query.max },
+        packedPrice: { $lte: req.query.max },
       });
       res.send({ data: products, total: products.length });
     }
@@ -140,7 +140,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
         series: { $regex: req.query.series, $options: "i" },
-        packedPrice: { $lt: req.query.max },
+        packedPrice: { $lte: req.query.max },
       });
       res.send({ data: products, total: products.length });
     }
@@ -155,18 +155,18 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
     }
 
     //category,color
-    else if (req.query.category && req.query.color) {
-      const color = await ProductModel.find({
-        colour: { $regex: req.query.color, $options: "i" },
-        category: { $regex: req.query.color, $options: "i" },
+    else if (req.query.category && req.query.colour) {
+      const colour = await ProductModel.find({
+        colour: { $regex: req.query.colour, $options: "i" },
+        category: { $regex: req.query.colour, $options: "i" },
       });
-      res.send({ data: color, total: color.length });
+      res.send({ data: colour, total: colour.length });
     }
 
     //category,price
     else if (req.query.category &&  req.query.max) {
       const data = await ProductModel.find({
-        price: { $lt: req.query.max },
+        packedPrice: { $lte: req.query.max },
         category: { $regex: req.query.category, $options: "i" },
       });
       res.send({ data: data, total: data.length });
