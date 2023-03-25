@@ -158,7 +158,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
     else if (req.query.category && req.query.colour) {
       const colour = await ProductModel.find({
         colour: { $regex: req.query.colour, $options: "i" },
-        category: { $regex: req.query.colour, $options: "i" },
+        category: { $regex: req.query.category, $options: "i" },
       });
       res.send({ data: colour, total: colour.length });
     }
