@@ -1,12 +1,13 @@
 const express = require("express");
-const { authenticate } = require("../middleware/authentication.middleware");
+const authMiddleware = require("../middleware/auth.middleware");
+const jwt = require("jsonwebtoken");
 const { AddressModel } = require("../Model/Address.model");
 const AddressRoutes = express.Router();
 
 
 
 
-AddressRoutes.get("/", authenticate, async (req, res) => {
+AddressRoutes.get("/", authMiddleware, async (req, res) => {
   const payload = req.body;
   try {
     const product = await AddressModel.find({ userId: payload.userId });
@@ -23,29 +24,21 @@ AddressRoutes.get("/", authenticate, async (req, res) => {
 
 
 
-AddressRoutes.post("/add", authenticate, async (req, res) => {
+AddressRoutes.post("/add", authMiddleware, async (req, res) => {
+    const token = req.headers.authorization;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
   const payload=req.body
   try {
-    const title = await AddressModel.findOne({ address: payload.address });
-    console.log(title)
-    if (title) {
-      res
-        .status(200)
-        .send({
-          msg: "This Address is already Present",
-          error: true,
-        });
-    } else {
       const data = new AddressModel(payload);
       await data.save();
+      logger.info("User Added data", { userId: decoded.userId, payload, date });
       res.send({ msg: "Your address is added" });
-    }
   } catch (err) {
     res.send({ msg: "could not add Address" });
   }
 });
 
-AddressRoutes.patch("/update/:id", authenticate, async (req, res) => {
+AddressRoutes.patch("/update/:id", authMiddleware, async (req, res) => {
   const Id = req.params.id;
   const payload = req.body;
 
@@ -67,7 +60,7 @@ AddressRoutes.patch("/update/:id", authenticate, async (req, res) => {
   }
 });
 
-AddressRoutes.delete("/delete/:id", authenticate, async (req, res) => {
+AddressRoutes.delete("/delete/:id", authMiddleware, async (req, res) => {
   const Id = req.params.id;
   const note = await AddressModel.findOne({ _id: Id });
   const hotelId = note.created_by;

@@ -212,7 +212,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       });
       res.send({ data: products, total: products.length });
     }
-    else if (req.query.category == "all") {
+    else if (req.query.category == "All") {
       const products = await ProductModel.find();
 
       res.status(200).send({ products, total: products.length });

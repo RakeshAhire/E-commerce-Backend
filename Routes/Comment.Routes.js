@@ -105,7 +105,7 @@ CommentRoutes.patch("/update/:id", authMiddleware, async (req, res) => {
       res.send({ msg: "You are not authorized" });
     } else {
       await CommentModel.findByIdAndUpdate({ _id: Id }, payload);
-      logger.info("User updated data", { userId: user, payload, date });
+      logger.info("User Updated data", { userId: Id, payload, date });
       res.send({ msg: "updated Sucessfully" });
     }
   } catch (err) {
@@ -129,6 +129,7 @@ CommentRoutes.delete("/delete/:id", authenticate, async (req, res) => {
     } else {
       await CommentModel.findByIdAndDelete({ _id: Id });
       res.send("Delete Your Comment");
+      logger.info("User Delete comment", { userId: Id, payload, date });
     }
   } catch (err) {
     console.log(err);
