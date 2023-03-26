@@ -62,7 +62,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       req.query.colour &&
       req.query.category &&
       req.query.size &&
-      req.query.packedPrice 
+      req.query.packedPrice
     ) {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
@@ -104,11 +104,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
     }
 
     // category,size ,price
-    else if (
-      req.query.category &&
-      req.query.size &&
-      req.query.packedPrice
-    ) {
+    else if (req.query.category && req.query.size && req.query.packedPrice) {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
         size: { $regex: req.query.size, $options: "i" },
@@ -118,11 +114,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
     }
 
     // category,color ,price
-    else if (
-      req.query.category &&
-      req.query.colour &&
-      req.query.packedPrice
-    ) {
+    else if (req.query.category && req.query.colour && req.query.packedPrice) {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
         colour: { $regex: req.query.colour, $options: "i" },
@@ -132,11 +124,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
     }
 
     // category,series ,price
-    else if (
-      req.query.category &&
-      req.query.series &&
-      req.query.packedPrice
-    ) {
+    else if (req.query.category && req.query.series && req.query.packedPrice) {
       const products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
         series: { $regex: req.query.series, $options: "i" },
@@ -164,7 +152,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
     }
 
     //category,price
-    else if (req.query.category &&  req.query.packedPrice) {
+    else if (req.query.category && req.query.packedPrice) {
       const data = await ProductModel.find({
         packedPrice: { $lte: req.query.packedPrice },
         category: { $regex: req.query.category, $options: "i" },
@@ -181,7 +169,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       res.send({ data: data, total: data.length });
 
       //category,Price
-    } else if ( req.query.sort) {
+    } else if (req.query.sort) {
       const order = req.query.sort;
       if (order === "asc") {
         const products = await ProductModel.find({})
@@ -196,22 +184,18 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
           .exec();
         res.status(200).send({ products, total: products.length });
       }
-    } 
-    else if (req.query.q &&req.query.rating) {
+    } else if (req.query.q && req.query.rating) {
       let products = await ProductModel.find({
         title: { $regex: req.query.q, $options: "i" },
         rating: { $gt: req.query.rating },
       });
       res.send({ data: products, total: products.length });
-    } 
-    else if ( req.query.rating) {
+    } else if (req.query.rating) {
       const products = await ProductModel.find({
-
         rating: { $gt: req.query.rating },
       });
       res.send({ data: products, total: products.length });
-    } 
-    else if (req.query.brand) {
+    } else if (req.query.brand) {
       const products = await ProductModel.find({
         brand: { $regex: req.query.brand, $options: "i" },
       });
@@ -221,9 +205,12 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         title: { $regex: req.query.q, $options: "i" },
       });
       res.send({ data: products, total: products.length });
-    } else {
-      const product = await ProductModel.find();
-      res.send({ data: product, total: product.length });
+    } else if (req.query.brand && req.query.category) {
+      let products = await ProductModel.find({
+        category: { $regex: req.query.category, $options: "i" },
+        rating: { $gt: req.query.rating },
+      });
+      res.send({ data: products, total: products.length });
     }
   } catch (e) {
     return res.status(500).send(e.message);
@@ -235,7 +222,7 @@ ProductRoutes.get("/", authenticate, async (req, res) => {
   try {
     const product = await ProductModel.find({ vendorId: payload.vendorId });
     console.log(product);
-    res.send({ data: product });
+    res.send({ data: product, total: product.length });
   } catch (error) {
     console.log("error", error);
     res.status(500).send({
@@ -270,7 +257,6 @@ ProductRoutes.post("/add", authenticate, async (req, res) => {
     let data = req.body;
     let data1 = new ProductModel(data);
     let saved = await data1.save();
-
     res.send({ msg: "Data Added" });
   } catch (err) {
     res.send({ msg: "could not add Data" });

@@ -3,6 +3,7 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { VendorModel } = require("../Model/vendor.model");
+const { CommentModel } = require("../Model/Comment.Model");
 
 const saltRounds = +process.env.saltRounds;
 
@@ -109,6 +110,8 @@ VendorRoutes.get("/", async (req, res) => {
     });
   }
 });
+
+
 VendorRoutes.get("/:id", async (req, res) => {
   const Id = req.params.id;
 
