@@ -7,8 +7,13 @@ const { ProductModel } = require("../Model/Product.Model");
 ProductRoutes.get("/allproductdata", async (req, res) => {
   try {
     // category,Price,colour,size,price
-
-    if (
+    if ((req.query.category =="All") && (req.query.rating)) {
+      const products = await ProductModel.find({
+        rating: { $gte: req.query.rating },
+      });
+      res.status(200).send({ products, total: products.length });
+    } 
+    else if (
       req.query.category &&
       req.query.colour &&
       req.query.size &&
@@ -24,6 +29,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
       });
       res.send({ data: products, total: products.length });
     }
+   
 
     // category,Price,colour,size
     else if (
@@ -191,22 +197,16 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         res.status(200).send({ products, total: products.length });
       }
     } 
-    else if (req.query.category == "All" && req.query.rating) {
-      const products = await ProductModel.find({
-        rating: { $gt: req.query.rating },
-      });
-
-      res.status(200).send({ products, total: products.length });
-    } 
+   
     else if (req.query.q && req.query.rating) {
       let products = await ProductModel.find({
         title: { $regex: req.query.q, $options: "i" },
-        rating: { $gt: req.query.rating },
+        rating: { $gte: req.query.rating },
       });
       res.send({ data: products, total: products.length });
     } else if (req.query.rating) {
       const products = await ProductModel.find({
-        rating: { $gt: req.query.rating },
+        rating: { $gte: req.query.rating },
       });
       res.send({ data: products, total: products.length });
     } else if (req.query.brand) {

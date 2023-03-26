@@ -63,7 +63,6 @@ CartRoutes.post("/add", authMiddleware, async (req, res) => {
   // console.log(payload)
   try {
     let cartItem = await CartModel.findOne({ productId:payload.productId });
-
     if (cartItem) {
       cartItem.quantity += 1;
       await cartItem.save();

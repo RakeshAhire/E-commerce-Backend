@@ -4,9 +4,6 @@ const { authenticate } = require("../middleware/authentication.middleware");
 const { AddressModel } = require("../Model/Address.model");
 const AddressRoutes = express.Router();
 
-
-
-
 AddressRoutes.get("/", authMiddleware, async (req, res) => {
   const payload = req.body;
   try {
@@ -22,14 +19,15 @@ AddressRoutes.get("/", authMiddleware, async (req, res) => {
   }
 });
 
-
-
 AddressRoutes.post("/add", authMiddleware, async (req, res) => {
-  const payload=req.body
-  try { 
-      const data = new AddressModel(payload);
-      await data.save();
-      res.send({ msg: "Your address is added" });
+  const payload = req.body;
+  try {
+    const data = await AddressModel.find({ userId: payload.userId });
+    data.address.forEach((item) => {
+      console.log(item) 
+    });
+    await data.save();
+    res.send({ msg: "add Address" });
   } catch (err) {
     res.send({ msg: "could not add Address" });
   }
