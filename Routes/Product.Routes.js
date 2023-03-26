@@ -211,6 +211,8 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         rating: { $gt: req.query.rating },
       });
       res.send({ data: products, total: products.length });
+    }else{
+      res.send({ meassage: "Data note found" });
     }
   } catch (e) {
     return res.status(500).send(e.message);
