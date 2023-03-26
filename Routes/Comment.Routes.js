@@ -6,7 +6,8 @@ const { authenticate } = require("../middleware/authentication.middleware");
 const authMiddleware = require("../middleware/auth.middleware");
 const jwt = require("jsonwebtoken");
 const OtpModel = require("../Model/otp.model");
-const logger = require("../middleware/Logger")
+const logger = require("../middleware/Logger");
+const { ProductModel } = require("../Model/Product.Model");
 
 CommentRoutes.get("/allcomment", async (req, res) => {
   try {
@@ -33,11 +34,25 @@ CommentRoutes.get("/productcomment/:id", async (req, res) => {
   }
 });
 
+CommentRoutes.get("/vendorcomment/:id", async (req, res) => {
+  const Id = req.params.id;
+  try {
+    const product = await CommentModel.find({vendorId:Id});
+    res.send({ data: product,totalcomment:product.length,rating:product.length });
+  } catch (error) {
+    res.status(500).send({
+      error: true,
+      msg: "something went wrong",
+    });
+  }
+});
+
 CommentRoutes.get("/:id", async (req, res) => {
   const Id = req.params.id;
   try {
     const product = await CommentModel.find({ productId: Id });
-    console.log(product);
+
+    logger.info("User Added comment", { userId: saved.userId, payload, date });
     res.send({ data: product });
   } catch (error) {
     console.log("error", error);
@@ -52,12 +67,10 @@ CommentRoutes.post("/add", authMiddleware, async (req, res) => {
   let payload = req.body;
   const token = req.headers.authorization;
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  const x = decoded.userId;
+  const date = new Date();
 
   const data = await OtpModel.find({ _id: decoded.userId });
-
-  // const d=(data[0].name)
-  // console.log(d)
+  const p = await ProductModel.find({ _id: payload.productId });
   try {
     let data1 = new CommentModel({
       comment: payload.comment,
@@ -66,10 +79,12 @@ CommentRoutes.post("/add", authMiddleware, async (req, res) => {
       image: payload.image,
       userId: decoded.userId,
       productId: payload.productId,
+      vendorId: p[0].vendorId,
     });
     // console.log(data1)
     let saved = await data1.save();
-    logger.info("User updated data", { payload });
+    // console.log(saved);
+    logger.info("User Added comment", { userId: saved.userId, payload, date });
     res.send({ msg: "Your Comment is Added" });
   } catch (err) {
     res.send(err);
@@ -80,7 +95,7 @@ CommentRoutes.patch("/update/:id", authMiddleware, async (req, res) => {
   const user = req.body.userId;
   const Id = req.params.id;
   const payload = req.body;
-
+  const date = new Date();
   const data = await CommentModel.findOne({ _id: Id });
   const data1 = data.userId;
   const a = JSON.stringify(data1);
@@ -90,6 +105,7 @@ CommentRoutes.patch("/update/:id", authMiddleware, async (req, res) => {
       res.send({ msg: "You are not authorized" });
     } else {
       await CommentModel.findByIdAndUpdate({ _id: Id }, payload);
+      logger.info("User updated data", { userId: user, payload, date });
       res.send({ msg: "updated Sucessfully" });
     }
   } catch (err) {

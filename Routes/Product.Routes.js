@@ -140,6 +140,12 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         size: { $regex: req.query.size, $options: "i" },
       });
       res.send({ data: products, total: products.length });
+    } else if (req.query.rating && req.query.category) {
+      const products = await ProductModel.find({
+        category: { $regex: req.query.category, $options: "i" },
+        rating: { $gte: req.query.rating },
+      });
+      res.send({ data: products, total: products.length });
     }
 
     //category,color
@@ -205,24 +211,49 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         title: { $regex: req.query.q, $options: "i" },
       });
       res.send({ data: products, total: products.length });
-    } else if (req.query.brand && req.query.category) {
+    } else if (req.query.category) {
       let products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
-        rating: { $gt: req.query.rating },
       });
       res.send({ data: products, total: products.length });
-    }else{
-      res.send({ meassage: "Data note found" });
+    }
+    else if (req.query.isbranded) {
+     
+        const products = await ProductModel.find({isbranded:true})
+          
+        res.status(200).send({ products, total: products.length });
+      } 
+    
+     else {
+      res.send({ meassge: "Data not found" });
     }
   } catch (e) {
     return res.status(500).send(e.message);
   }
 });
 
+
+
 ProductRoutes.get("/", authenticate, async (req, res) => {
   const payload = req.body;
   try {
     const product = await ProductModel.find({ vendorId: payload.vendorId });
+    console.log(product);
+    res.send({ data: product, total: product.length });
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).send({
+      error: true,
+      msg: "something went wrong",
+    });
+  }
+});
+
+
+ProductRoutes.get("/vendorwisedata/:id", async (req, res) => {
+  const Id = req.params.id;
+  try {
+    const product = await ProductModel.find({ vendorId:Id });
     console.log(product);
     res.send({ data: product, total: product.length });
   } catch (error) {
@@ -259,6 +290,7 @@ ProductRoutes.post("/add", authenticate, async (req, res) => {
     let data = req.body;
     let data1 = new ProductModel(data);
     let saved = await data1.save();
+
     res.send({ msg: "Data Added" });
   } catch (err) {
     res.send({ msg: "could not add Data" });

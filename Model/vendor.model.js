@@ -11,6 +11,8 @@ const vendorSchema = new mongoose.Schema({
   pincode:{ type: String, required: true },
   phone:{ type: Number, required: true },
   state:{ type: String, required: true },
+  rating:{ type: String, default:"0"},
+  comment:{ type: String, default:"0"},
   userType: { type: String, required: true, default: "vendor" }
 });
 

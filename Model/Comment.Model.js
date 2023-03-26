@@ -13,6 +13,10 @@ const CommentSchema = new mongoose.Schema(
     productId:{
       type: mongoose.Schema.Types.ObjectId,
       ref: "product",
+    },
+    vendorId:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "vendor",
     }
   },
 

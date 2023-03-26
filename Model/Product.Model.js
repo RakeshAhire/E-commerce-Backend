@@ -11,6 +11,7 @@ const productSchema = new mongoose.Schema(
     rating: { type: Number },
     info: { type: String },
     brand: { type: String },
+    isbranded:{ type: String ,default:true},
     tags: [{ type: String }],
     pack:[{
      quant:{ type: Number },

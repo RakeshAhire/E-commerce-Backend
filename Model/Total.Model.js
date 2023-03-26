@@ -3,17 +3,12 @@ const mongoose = require("mongoose");
 const TotalcommentSchema = new mongoose.Schema(
   {
     username: { type: String },
+    img:{ type: String },
     rating: { type: Number },
     review: { type: Number },
     info:{ type: String },
-    productId:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "product",
-    },
-    commentId:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "comment",
-    },
+    productid:[{ type: String }],
+    commentId:[{ type: String }],
     vendorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "vendor",
