@@ -190,7 +190,15 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
           .exec();
         res.status(200).send({ products, total: products.length });
       }
-    } else if (req.query.q && req.query.rating) {
+    } 
+    else if (req.query.category == "All" && req.query.rating) {
+      const products = await ProductModel.find({
+        rating: { $gt: req.query.rating },
+      });
+
+      res.status(200).send({ products, total: products.length });
+    } 
+    else if (req.query.q && req.query.rating) {
       let products = await ProductModel.find({
         title: { $regex: req.query.q, $options: "i" },
         rating: { $gt: req.query.rating },
@@ -217,6 +225,7 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
 
       res.status(200).send({ products, total: products.length });
     } 
+  
      else if (req.query.category) {
       let products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },

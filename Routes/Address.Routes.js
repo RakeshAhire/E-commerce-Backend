@@ -1,4 +1,5 @@
 const express = require("express");
+const authMiddleware = require("../middleware/auth.middleware");
 const { authenticate } = require("../middleware/authentication.middleware");
 const { AddressModel } = require("../Model/Address.model");
 const AddressRoutes = express.Router();
@@ -6,11 +7,11 @@ const AddressRoutes = express.Router();
 
 
 
-AddressRoutes.get("/", authenticate, async (req, res) => {
+AddressRoutes.get("/", authMiddleware, async (req, res) => {
   const payload = req.body;
   try {
     const product = await AddressModel.find({ userId: payload.userId });
-    console.log(product);
+    // console.log(product);
     res.send({ data: product });
   } catch (error) {
     console.log("error", error);
@@ -23,23 +24,12 @@ AddressRoutes.get("/", authenticate, async (req, res) => {
 
 
 
-AddressRoutes.post("/add", authenticate, async (req, res) => {
+AddressRoutes.post("/add", authMiddleware, async (req, res) => {
   const payload=req.body
-  try {
-    const title = await AddressModel.findOne({ address: payload.address });
-    console.log(title)
-    if (title) {
-      res
-        .status(200)
-        .send({
-          msg: "This Address is already Present",
-          error: true,
-        });
-    } else {
+  try { 
       const data = new AddressModel(payload);
       await data.save();
       res.send({ msg: "Your address is added" });
-    }
   } catch (err) {
     res.send({ msg: "could not add Address" });
   }
