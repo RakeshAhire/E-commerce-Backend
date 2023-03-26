@@ -222,10 +222,6 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         category: { $regex: req.query.category, $options: "i" },
       });
       res.send({ data: products, total: products.length });
-    } else if (req.query.isbranded) {
-      const products = await ProductModel.find({ isbranded: true });
-
-      res.status(200).send({ products, total: products.length });
     } else {
       res.send({ meassge: "Data not found" });
     }
