@@ -7,6 +7,8 @@ const { VendorModel } = require("../Model/vendor.model");
 const OrderRoutes = express.Router();
 const jwt = require("jsonwebtoken");
 const { OrderModel } = require("../Model/Order.Model");
+
+
 OrderRoutes.get("/", authMiddleware, async (req, res) => {
     const payload = req.body;  
     try {
@@ -28,17 +30,7 @@ OrderRoutes.get("/vendororder",authenticate, async (req, res) => {
 
   try {
     const product = await OrderModel.find({vendorId:req.body.vendorId});
-    // console.log(product)
-    res.send({product,Total:product.length});
-  } catch (error) {
-    res.status(404).send({ msg: "something went wrong" });
-  }
-});
-
-OrderRoutes.get("/totalorder", async (req, res) => {
-  try {
-    const product = await OrderModel.find();
-     console.log(product)
+   console.log(product)
     res.send({product,Total:product.length});
   } catch (error) {
     res.status(404).send({ msg: "something went wrong" });
@@ -79,26 +71,8 @@ OrderRoutes.get("/:id", async (req, res) => {
 
 OrderRoutes.post("/add", authMiddleware, async (req, res) => {
   let data = req.body;
-  const token = req.headers.authorization;
-  const product = await ProductModel.findOne({ _id: data.productId });
-  const address = await AddressModel.findOne({ _id: data.addressId });
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  req.body.userId = decoded.userId;
   try {
-    let data1 = new OrderModel({
-      title: data.title,
-      image: data.image,
-      price: data.price,
-      totalPrice: data.price * data.quantity,
-      discountPrice: data.discountPrice,
-      color: data.color,
-      paymentmode: data.paymentmode,
-      quantity: data.quantity,
-      addressId: address._id,
-      productId: product._id,
-      userId: decoded.userId,
-      vendorId: product.vendorId,
-    });
+    let data1 = new OrderModel(data);
     let saved = await data1.save();
 
     res.send({ msg: "Data Added" });
