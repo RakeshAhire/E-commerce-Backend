@@ -211,28 +211,28 @@ ProductRoutes.get("/allproductdata", async (req, res) => {
         title: { $regex: req.query.q, $options: "i" },
       });
       res.send({ data: products, total: products.length });
-    } else if (req.query.category) {
+    }
+    else if (req.query.category == "all") {
+      const products = await ProductModel.find();
+
+      res.status(200).send({ products, total: products.length });
+    } 
+     else if (req.query.category) {
       let products = await ProductModel.find({
         category: { $regex: req.query.category, $options: "i" },
       });
       res.send({ data: products, total: products.length });
-    }
-    else if (req.query.isbranded) {
-     
-        const products = await ProductModel.find({isbranded:true})
-          
-        res.status(200).send({ products, total: products.length });
-      } 
-    
-     else {
+    } else if (req.query.isbranded) {
+      const products = await ProductModel.find({ isbranded: true });
+
+      res.status(200).send({ products, total: products.length });
+    } else {
       res.send({ meassge: "Data not found" });
     }
   } catch (e) {
     return res.status(500).send(e.message);
   }
 });
-
-
 
 ProductRoutes.get("/", authenticate, async (req, res) => {
   const payload = req.body;
@@ -249,11 +249,10 @@ ProductRoutes.get("/", authenticate, async (req, res) => {
   }
 });
 
-
 ProductRoutes.get("/vendorwisedata/:id", async (req, res) => {
   const Id = req.params.id;
   try {
-    const product = await ProductModel.find({ vendorId:Id });
+    const product = await ProductModel.find({ vendorId: Id });
     console.log(product);
     res.send({ data: product, total: product.length });
   } catch (error) {
