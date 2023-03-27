@@ -23,26 +23,14 @@ OrderRoutes.get("/", authMiddleware, async (req, res) => {
   }
 });
 
-// OrderRoutes.get("/vendororder", async (req, res) => {
-//   try {
-//     const data = await OrderModel.find();
-//     const totaldata=[]
-//     for (let i = 0; i < data.length; i++) {
-//       const arr = [];
-//       for (let j = 0; j < data[i].products.length; j++) {
-//         if (data[i].products[j].vendorId == "64184720c4c7af45ae7939d9") {
-//           arr.push(shippingAddress=data[i].shippingAddress,
-//                    productId=data[i].products[j].productId,
-//                    quantity= data[i].products[j].quantity);
-//         }
-//       }
-//       totaldata.push(arr)
-//     }
-//     res.send({ totaldata });
-//   } catch (error) {
-//     res.status(404).send({ msg: "something went wrong" });
-//   }
-// });
+OrderRoutes.get("/totalorder", async (req, res) => {
+  try {
+    const data = await OrderModel.find();
+    res.send({ data });
+  } catch (error) {
+    res.status(404).send({ msg: "something went wrong" });
+  }
+});
 
 OrderRoutes.get("/vendororder", authenticate, async (req, res) => {
   const token = req.headers.authorization;
