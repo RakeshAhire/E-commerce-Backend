@@ -14,6 +14,7 @@ const { EmailRoutes } = require("./Routes/Email.Routes");
 const { ContactRoutes } = require("./Routes/Contact.Routes");
 const { BlogRoutes } = require("./Routes/Blog.Routes");
 const {  TotalRoutes } = require("./Routes/Total.Routes");
+const { AdminRoutes } = require("./Routes/Admin.Routes");
 
 require("dotenv").config();
 
@@ -31,7 +32,7 @@ app.get("/", (req, res) => {
   res.send("Welcome");
 });
 
-
+app.use("/admin",AdminRoutes)
 app.use("/total",TotalRoutes)
 app.use("/contact",ContactRoutes)
 app.use("/otp", require("./Routes/otp.routes"));
