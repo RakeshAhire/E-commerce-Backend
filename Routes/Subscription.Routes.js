@@ -1,6 +1,7 @@
 const express = require("express");
 const AdminMiddleware = require("../middleware/Admin.middleware");
-const { EmailModel } = require("../Model/Email.Model");
+
+const { SubscriptionModel } = require("../Model/Subscription.Model");
 
 const SubscriptionRoutes = express.Router();
 
@@ -9,7 +10,7 @@ const SubscriptionRoutes = express.Router();
 
 SubscriptionRoutes.get("/", async (req, res) => {
   try {
-    const product = await EmailModel.find();
+    const product = await SubscriptionModel.find();
     console.log(product);
     res.send({ data: product });
   } catch (error) {
@@ -24,23 +25,24 @@ SubscriptionRoutes.get("/", async (req, res) => {
 
 
 SubscriptionRoutes.post("/add",AdminMiddleware, async (req, res) => {
+
     let payload = req.body;
     try {
-      let data1 = new EmailModel({adminId:user.body.adminId},payload);
+      let data1 = new SubscriptionModel(payload);
       console.log(data1)
       let saved = await data1.save();
-      res.send({ msg: "Your Email is Added" });
+      res.send({ msg: "Your Subscription is Added" });
     } catch (err) {
-      res.send({ msg: "Your Email is not Added" });
+      res.send({ msg: "Your Subscription is not Added" });
     }
   });
 
 
-SubscriptionRoutes.patch("/update/:id", async (req, res) => {
+SubscriptionRoutes.patch("/update/:id",AdminMiddleware, async (req, res) => {
   const Id = req.params.id;
   const payload = req.body;
   try {
-      await EmailModel.findByIdAndUpdate({ _id: Id }, payload);
+      await SubscriptionModel.findByIdAndUpdate({ _id: Id }, payload);
       res.send({ msg: "updated Sucessfully" });
   } catch (err) {
     console.log(err);
@@ -48,12 +50,12 @@ SubscriptionRoutes.patch("/update/:id", async (req, res) => {
   }
 });
 
-SubscriptionRoutes.delete("/delete/:id", async (req, res) => {
+SubscriptionRoutes.delete("/delete/:id",AdminMiddleware, async (req, res) => {
   const Id = req.params.id;
  
   try {
   
-    await EmailModel.findByIdAndDelete({ _id: Id });
+    await SubscriptionModel.findByIdAndDelete({ _id: Id });
       res.send("Deleted Your Address");
   } catch (err) {
     console.log(err);

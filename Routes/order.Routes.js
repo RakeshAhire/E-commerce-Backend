@@ -26,7 +26,7 @@ OrderRoutes.get("/", authMiddleware, async (req, res) => {
 OrderRoutes.get("/totalorder", async (req, res) => {
   try {
     const data = await OrderModel.find();
-    res.send({ data });
+    res.send({ data ,total:data.length});
   } catch (error) {
     res.status(404).send({ msg: "something went wrong" });
   }
@@ -35,10 +35,7 @@ OrderRoutes.get("/totalorder", async (req, res) => {
 OrderRoutes.get("/vendororder", authenticate, async (req, res) => {
   const token = req.headers.authorization;
   const decoded = jwt.verify(token, process.env.key);
-  const x = decoded.vendorId;
-  const y = "64184720c4c7af45ae7939d9";
-  console.log(x);
-  console.log(y);
+  
   try {
     const data = await OrderModel.find();
     const totaldata = [];
@@ -46,8 +43,8 @@ OrderRoutes.get("/vendororder", authenticate, async (req, res) => {
       const arr = [];
       for (let j = 0; j < data[i].products.length; j++) {
         if (data[i].products[j].vendorId == decoded.vendorId) {
-          arr.push(data[i].products[j],
-                    {orderId:data[i]._id,
+          arr.push({products:data[i].products[j],
+                    orderId:data[i]._id,
                     AddressId:data[i].addressId,
                     shippingAddress:data[i].shippingAddress,
                     username:data[i].username,
@@ -64,6 +61,46 @@ OrderRoutes.get("/vendororder", authenticate, async (req, res) => {
     res.status(404).send({ msg: "something went wrong" });
   }
 });
+
+
+// OrderRoutes.get("/vendororder", authenticate, async (req, res) => {
+//   const token = req.headers.authorization;
+//   const decoded = jwt.verify(token, process.env.key);
+  
+//   try {
+//     const data = await OrderModel.find();
+//     const totaldata = [];
+//     for (let i = 0; i < data.length; i++) {
+//       const arr = [];
+//       for (let j = 0; j < data[i].products.length; j++) {
+//         if (data[i].products[j].vendorId == decoded.vendorId) {
+//           arr.push({title:data[i].products[j].title,
+//                     productId:data[i].products[j].productId,
+//                     image:data[i].products[j].image,
+//                     phone:data[i].products[i].phone,
+//                     price:data[i].products[j].title,
+//                     color:data[i].products[j].color,
+//                     size:data[i].products[j].size,
+//                     quantity:data[i].products[j].quantity,
+//                     status:data[i].products[j].status,
+//                     _id:data[i].products[j]._id,
+//                     orderId:data[i]._id,
+//                     AddressId:data[i].addressId,
+//                     shippingAddress:data[i].shippingAddress,
+//                     username:data[i].username,
+//                     userId:data[i].userId,
+//                     createdAt:data[i].createdAt});
+//         }
+//       }
+//       if (arr.length > 0) {
+//         totaldata.push(arr);
+//       }
+//     }
+//     res.send({ data: totaldata, total: totaldata.length });
+//   } catch (error) {
+//     res.status(404).send({ msg: "something went wrong" });
+//   }
+// });
 
 // OrderRoutes.get("/vendortodayorder", authenticate, async (req, res) => {
 //   //     const s = '2023-03-20T11:50:26.404+00:00';
