@@ -23,34 +23,74 @@ OrderRoutes.get("/", authMiddleware, async (req, res) => {
   }
 });
 
-OrderRoutes.get("/vendororder", async (req, res) => {
+// OrderRoutes.get("/vendororder", async (req, res) => {
+//   try {
+//     const data = await OrderModel.find();
+//     const totaldata=[]
+//     for (let i = 0; i < data.length; i++) {
+//       const arr = [];
+//       for (let j = 0; j < data[i].products.length; j++) {
+//         if (data[i].products[j].vendorId == "64184720c4c7af45ae7939d9") {
+//           arr.push(shippingAddress=data[i].shippingAddress,
+//                    productId=data[i].products[j].productId,
+//                    quantity= data[i].products[j].quantity);
+//         }
+//       }
+//       totaldata.push(arr)
+//     }
+//     res.send({ totaldata });
+//   } catch (error) {
+//     res.status(404).send({ msg: "something went wrong" });
+//   }
+// });
+
+OrderRoutes.get("/vendororder", authenticate, async (req, res) => {
+  const token = req.headers.authorization;
+  const decoded = jwt.verify(token, process.env.key);
+  const x = decoded.vendorId;
+  const y = "64184720c4c7af45ae7939d9";
+  console.log(x);
+  console.log(y);
   try {
-    const product = await Order.findOne((err, order) => {
-      if (err) throw err;
-      // Get the vendorId of the first product in the order
-      const vendorId = product.products[0].vendorId;
-      console.log(vendorId); // This will log the vendorId to the console
-    });
-    res.send({ product, Total: product.length });
+    const data = await OrderModel.find();
+    const totaldata = [];
+    for (let i = 0; i < data.length; i++) {
+      const arr = [];
+      for (let j = 0; j < data[i].products.length; j++) {
+        if (data[i].products[j].vendorId == decoded.vendorId) {
+          arr.push(data[i].products[j],
+                    {orderId:data[i]._id,
+                    AddressId:data[i].addressId,
+                    shippingAddress:data[i].shippingAddress,
+                    username:data[i].username,
+                    userId:data[i].userId,
+                    createdAt:data[i].createdAt});
+        }
+      }
+      if (arr.length > 0) {
+        totaldata.push(arr);
+      }
+    }
+    res.send({ data: totaldata, total: totaldata.length });
   } catch (error) {
     res.status(404).send({ msg: "something went wrong" });
   }
 });
 
-OrderRoutes.get("/vendortodayorder", authenticate, async (req, res) => {
-  //     const s = '2023-03-20T11:50:26.404+00:00';
-  //      const [y, m, d, hh, mm, ss, ms] = s.match(/\d+/g);
-  //      const date = new Date(Date.UTC(y, m - 1, d, hh, mm, ss, ms));
-  //      const formatted = date.toLocaleString();
-  // console.log(formatted);
+// OrderRoutes.get("/vendortodayorder", authenticate, async (req, res) => {
+//   //     const s = '2023-03-20T11:50:26.404+00:00';
+//   //      const [y, m, d, hh, mm, ss, ms] = s.match(/\d+/g);
+//   //      const date = new Date(Date.UTC(y, m - 1, d, hh, mm, ss, ms));
+//   //      const formatted = date.toLocaleString();
+//   // console.log(formatted);
 
-  const product = await OrderModel.find({ createdAt: new Date() });
-  try {
-    res.send({ product, Total: product.length });
-  } catch (error) {
-    res.status(404).send({ msg: "something went wrong" });
-  }
-});
+//   const product = await OrderModel.find({ createdAt: new Date() });
+//   try {
+//     res.send({ product, Total: product.length });
+//   } catch (error) {
+//     res.status(404).send({ msg: "something went wrong" });
+//   }
+// });
 
 OrderRoutes.get("/:id", async (req, res) => {
   const id = req.params.id;

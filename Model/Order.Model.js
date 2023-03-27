@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
+  username:{ type: String, required: true },
   orderStatus: { type: String, enum: ['Pending', 'Confirmed', 'Delivered'], default: 'Pending' },
   shippingAddress:{ type: String, required: true },
   totalprice:{ type: String, required: true },
