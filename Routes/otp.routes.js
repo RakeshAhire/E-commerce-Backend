@@ -23,14 +23,26 @@ router.post("/send", async (req, res) => {
 
   try {
     // Save the OTP code and expiration date to the database
-    const otp = new OtpModel({
-      phoneNumber,
-      email,
-      name,
-      otp: otpCode,
-      expiresAt,
-    });
-    await otp.save();
+    const data = await OtpModel.find({ phoneNumber: phoneNumber });
+    if (data.length==0) {
+      const otp = new OtpModel({
+        phoneNumber,
+        email,
+        name,
+        otp: otpCode,
+        expiresAt,
+      });
+      await otp.save();
+      res.send({
+        otpCode,
+      });
+    } else {
+      const x = await OtpModel.findById({ _id: data[0]._id });
+      const pay = { otp: otpCode, expiresAt };
+      const a = await OtpModel.findByIdAndUpdate({ _id: data[0]._id }, pay);
+      console.log(a);
+      res.send(otpCode);
+    }
 
     // Send the OTP code to the user's phone number using Twilio
     const message = `Your verification code is: ${otpCode}`;
@@ -47,9 +59,9 @@ router.post("/send", async (req, res) => {
     //   messageId: twilioResponse.sid,
     //   otp:message
     // });
-    res.send({
-      message
-    })
+    // res.send({
+    //   message,
+    // });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });
