@@ -37,8 +37,12 @@ CommentRoutes.get("/productcomment/:id", async (req, res) => {
 CommentRoutes.get("/vendorcomment/:id", async (req, res) => {
   const Id = req.params.id;
   try {
-    const product = await CommentModel.find({vendorId:Id});
-    res.send({ data: product,totalcomment:product.length,rating:product.length });
+    const product = await CommentModel.find({ vendorId: Id });
+    res.send({
+      data: product,
+      totalcomment: product.length,
+      rating: product.length,
+    });
   } catch (error) {
     res.status(500).send({
       error: true,
@@ -81,7 +85,7 @@ CommentRoutes.post("/add", authMiddleware, async (req, res) => {
       productId: payload.productId,
       vendorId: p[0].vendorId,
     });
-    // console.log(data1)
+    console.log(data1);
     let saved = await data1.save();
     // console.log(saved);
     logger.info("User Added comment", { userId: saved.userId, payload, date });
