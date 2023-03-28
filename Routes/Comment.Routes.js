@@ -100,10 +100,10 @@ CommentRoutes.post("/add", authMiddleware, async (req, res) => {
     for (let i = 0; i < x.length; i++) {
       sum += x[i].rating;
     }
-   const avg=(sum/x.length);
-   const com={rating:avg,comment:x.length }
+    const avg = sum / x.length;
+    const com = { rating: avg, comment: x.length };
 
-   await VendorModel.findByIdAndUpdate({_id:p[0].vendorId},com)
+    await VendorModel.findByIdAndUpdate({ _id: p[0].vendorId }, com);
 
     logger.info("User Added comment", { userId: saved.userId, payload, date });
     res.send({ msg: "Your Comment is Added" });

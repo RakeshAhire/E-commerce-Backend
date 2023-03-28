@@ -254,6 +254,39 @@ ProductRoutes.get("/", authenticate, async (req, res) => {
   }
 });
 
+ProductRoutes.get("/date/:id", async (req, res) => {
+  const Id = req.params.id;
+  const abc = req.body.date;
+  const product = await ProductModel.find({vendorId:Id});
+  try{
+  let data = [];
+
+  for (let i = 0; i < product.length; i++) {
+    let bag = "";
+    for (let j = 0; j < 1; j++) {
+      bag += product[i].createdAt;
+    }
+    let val = "";
+    for (let k = 4; k <= 14; k++) {
+      val += bag[k];
+    }
+    if (val == abc) {
+      data.push(product[i]);
+    }
+  }
+  res.send({
+    data: data,
+    total: data.length
+  });
+}catch (error) {
+  res.status(500).send({
+    error: true,
+    msg: "something went wrong",
+  });
+}
+
+});
+
 ProductRoutes.get("/vendorwisedata/:id", async (req, res) => {
   const Id = req.params.id;
   try {
