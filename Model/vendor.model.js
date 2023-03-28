@@ -8,6 +8,8 @@ const vendorSchema = new mongoose.Schema({
   password: { type: String, required: true },
   address:{ type: String, required: true },
   city:{ type: String, required: true },
+  rating:{ type: Number, required: true },
+  comment:{ type: Number, required: true },
   pincode:{ type: String, required: true },
   phone:{ type: Number, required: true },
   state:{ type: String, required: true },

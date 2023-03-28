@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const OtpModel = require("../Model/otp.model");
 const logger = require("../middleware/Logger");
 const { ProductModel } = require("../Model/Product.Model");
+const { VendorModel } = require("../Model/vendor.model");
 
 CommentRoutes.get("/allcomment", async (req, res) => {
   try {
@@ -38,10 +39,16 @@ CommentRoutes.get("/vendorcomment/:id", async (req, res) => {
   const Id = req.params.id;
   try {
     const product = await CommentModel.find({ vendorId: Id });
+    let sum = 0;
+    for (let i = 0; i < product.length; i++) {
+      sum += product[i].rating;
+    }
+    let x = sum / product.length;
+
     res.send({
       data: product,
       totalcomment: product.length,
-      rating: product.length,
+      rating: x,
     });
   } catch (error) {
     res.status(500).send({
@@ -85,9 +92,19 @@ CommentRoutes.post("/add", authMiddleware, async (req, res) => {
       productId: payload.productId,
       vendorId: p[0].vendorId,
     });
-    console.log(data1);
+
     let saved = await data1.save();
-    // console.log(saved);
+
+    let x = await CommentModel.find({ vendorId: p[0].vendorId });
+    let sum = 0;
+    for (let i = 0; i < x.length; i++) {
+      sum += x[i].rating;
+    }
+   const avg=(sum/x.length);
+   const com={rating:avg,comment:x.length }
+
+   await VendorModel.findByIdAndUpdate({_id:p[0].vendorId},com)
+
     logger.info("User Added comment", { userId: saved.userId, payload, date });
     res.send({ msg: "Your Comment is Added" });
   } catch (err) {
