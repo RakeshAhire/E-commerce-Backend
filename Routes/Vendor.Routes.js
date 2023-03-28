@@ -7,14 +7,11 @@ const { CommentModel } = require("../Model/Comment.Model");
 
 const saltRounds = +process.env.saltRounds;
 
-
-
 const VendorRoutes = express.Router();
 
 VendorRoutes.post("/register", async (req, res) => {
   const payload = req.body;
-  console.log(payload)
-
+  console.log(payload);
 
   try {
     const email = await VendorModel.findOne({ email: payload.email });
@@ -30,7 +27,7 @@ VendorRoutes.post("/register", async (req, res) => {
         } else {
           payload.password = hash;
           const user = new VendorModel(payload);
-          
+
           await user.save();
           res.status(200).send({
             msg: "Registration Success",
@@ -100,8 +97,15 @@ VendorRoutes.post("/login", async (req, res) => {
 
 VendorRoutes.get("/", async (req, res) => {
   try {
-    const product = await VendorModel.find();
-    res.send({ data: product });
+    if (req.query.rating) {
+      const product = await VendorModel.find({
+        rating: { $gte: req.query.rating },
+      });
+      res.send({ data: product, total: product.length });
+    } else {
+      const product = await VendorModel.find();
+      res.send({ data: product, total: product.length });
+    }
   } catch (error) {
     console.log("error", error);
     res.status(500).send({
@@ -110,7 +114,6 @@ VendorRoutes.get("/", async (req, res) => {
     });
   }
 });
-
 
 VendorRoutes.get("/:id", async (req, res) => {
   const Id = req.params.id;
