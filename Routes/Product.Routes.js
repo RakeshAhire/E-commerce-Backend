@@ -287,10 +287,10 @@ ProductRoutes.get("/date/:id", async (req, res) => {
 
 });
 
-ProductRoutes.get("/vendorwisedata/:id", async (req, res) => {
+ProductRoutes.get("/alldata", async (req, res) => {
   const Id = req.params.id;
   try {
-    const product = await ProductModel.find({ vendorId: Id });
+    const product = await ProductModel.find();
     console.log(product);
     res.send({ data: product, total: product.length });
   } catch (error) {
@@ -322,7 +322,7 @@ ProductRoutes.get("/:id", async (req, res) => {
   }
 });
 
-ProductRoutes.post("/add", authenticate, async (req, res) => {
+ProductRoutes.post("/add", async (req, res) => {
   try {
     let data = req.body;
     let data1 = new ProductModel(data);
