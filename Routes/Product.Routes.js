@@ -288,11 +288,17 @@ ProductRoutes.get("/date/:id", async (req, res) => {
 });
 
 ProductRoutes.get("/alldata", async (req, res) => {
-  const Id = req.params.id;
+ 
   try {
-    const product = await ProductModel.find();
-    console.log(product);
-    res.send({ data: product, total: product.length });
+    if (req.query.category) {
+      let products = await ProductModel.find({
+        category: { $regex: req.query.category, $options: "i" },
+      });
+      res.send({ data: products, total: products.length });
+    }else{
+      let products = await ProductModel.find();
+      res.send({ data: products, total: products.length });
+    }
   } catch (error) {
     console.log("error", error);
     res.status(500).send({
